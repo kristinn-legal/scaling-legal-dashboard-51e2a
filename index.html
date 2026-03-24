@@ -292,6 +292,31 @@
       text-align: center; font-size: 12px; color: #aeaeb2; margin-top: 8px;
     }
     .sync-footer span { font-weight: 500; }
+    /* Retainer history table */
+    .rh-card { background:#fff; border-radius:16px; padding:0; margin-bottom:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); overflow:hidden; }
+    .rh-card-title { font-size:11px; font-weight:600; letter-spacing:0.6px; text-transform:uppercase; color:#6e6e73; padding:18px 20px 14px; border-bottom:1px solid #f0f0ec; }
+    .rh-table { width:100%; border-collapse:collapse; }
+    .rh-table th { font-size:10px; text-transform:uppercase; letter-spacing:0.07em; color:#aaa; font-weight:500; text-align:center; padding:10px 12px 8px; border-bottom:1px solid #f0f0ec; white-space:nowrap; }
+    .rh-table th.is-current { color:#4a7cdc; font-weight:700; }
+    .rh-table th.col-client { text-align:left; padding-left:20px; min-width:130px; }
+    .rh-table th.col-unused { text-align:right; padding-right:20px; color:#c0392b; opacity:0.7; }
+    .rh-table td { padding:10px 12px; border-bottom:1px solid #f8f8f6; vertical-align:middle; }
+    .rh-table tr:last-child td { border-bottom:none; }
+    .rh-table tr:hover td { background:#fafaf8; }
+    .rh-td-client { padding-left:20px !important; }
+    .rh-client-name { font-size:13px; font-weight:600; color:#1a1a1a; }
+    .rh-client-cap { font-size:11px; color:#bbb; margin-top:1px; }
+    .rh-td-month { text-align:center; min-width:76px; }
+    .rh-td-unused { text-align:right; padding-right:20px !important; }
+    .rh-cell-inner { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .rh-hours { font-size:12px; font-weight:600; font-variant-numeric:tabular-nums; color:#1a1a1a; white-space:nowrap; }
+    .rh-hours.is-current { color:#4a7cdc; }
+    .rh-mini-bar { width:52px; height:4px; background:#eee; border-radius:2px; overflow:hidden; }
+    .rh-mini-fill { height:100%; background:#1a1a1a; border-radius:2px; }
+    .rh-mini-fill.is-current { background:#4a7cdc; }
+    .rh-no-data { color:#ddd; font-size:13px; }
+    .rh-unused-total { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; color:#c0392b; }
+    .rh-unused-sub { font-size:10px; color:#bbb; white-space:nowrap; }
   </style>
 </head>
 <body>
@@ -326,6 +351,13 @@
       <div id="cal-events"></div>
     </div>
   </div>
+
+  <!-- Retainer Usage History -->
+  <div class="rh-card">
+    <div class="rh-card-title">Retainer Usage — Last 6 Months</div>
+    <div id="rh-chart"></div>
+  </div>
+
 
   <!-- Contract Obligations Card -->
   <div class="card" style="margin-top:20px;">
@@ -526,6 +558,7 @@
     });
 
     const contentEl = document.getElementById('month-content');
+    renderRetainerHistory();
     if (!m.data) {
       contentEl.innerHTML = `
         <div class="empty-state">
@@ -562,6 +595,74 @@
       <div class="divider"></div>
       ${rowsHTML}
       ${driveLinkHTML}`;
+  }
+
+  function renderRetainerHistory() {
+    const el = document.getElementById('rh-chart');
+    const start = Math.max(0, currentIndex - 5);
+    const slice = months.slice(start, currentIndex + 1);
+
+    // Collect retainer clients (identified by meta starting with "Retainer ·")
+    const clientSet = new Map(); // name → cap (hours)
+    slice.forEach(m => {
+      if (!m.data) return;
+      m.data.clientRows.forEach(r => {
+        if (r.meta && r.meta.startsWith('Retainer ·') && !clientSet.has(r.name)) {
+          const capMatch = r.meta.match(/(\d+)h\/month/);
+          clientSet.set(r.name, capMatch ? parseInt(capMatch[1]) : 0);
+        }
+      });
+    });
+
+    if (clientSet.size === 0) {
+      el.innerHTML = '<div style="color:#bbb;font-size:13px;padding:16px 20px">No retainer data in this period.</div>';
+      return;
+    }
+
+    const shortLbl = m => { const p = m.label.split(' '); return p[0].slice(0,3) + " '" + p[1].slice(2); };
+
+    const headers = [
+      '<th class="col-client">Client</th>',
+      ...slice.map((m, i) => {
+        const isCur = (start + i) === currentIndex;
+        return '<th' + (isCur ? ' class="is-current"' : '') + '>' + shortLbl(m) + '</th>';
+      }),
+      '<th class="col-unused">Unused</th>'
+    ].join('');
+
+    const rows = [...clientSet.entries()].map(([name, cap]) => {
+      const short = name.replace(' ID 490224-1140', '').replace('Careflux ehf.', 'Careflux');
+      let totalUsed = 0;
+
+      const cells = slice.map((m, i) => {
+        const isCur = (start + i) === currentIndex;
+        if (!m.data) return '<td class="rh-td-month"><span class="rh-no-data">—</span></td>';
+        const row = m.data.clientRows.find(r => r.name === name);
+        if (!row || !row.meta || !row.meta.startsWith('Retainer ·')) return '<td class="rh-td-month"><span class="rh-no-data">—</span></td>';
+
+        const used = row.zero ? 0 : parseFloat(row.hours);
+        totalUsed += used;
+        const pct = Math.min(100, row.pct || 0);
+        const display = row.zero ? '0h' : row.hours;
+
+        return '<td class="rh-td-month"><div class="rh-cell-inner">' +
+          '<span class="rh-hours' + (isCur ? ' is-current' : '') + '">' + display + ' / ' + cap + 'h</span>' +
+          '<div class="rh-mini-bar"><div class="rh-mini-fill' + (isCur ? ' is-current' : '') + '" style="width:' + pct + '%"></div></div>' +
+          '</div></td>';
+      }).join('');
+
+      const totalCap = cap * slice.length;
+      const unused = Math.max(0, totalCap - totalUsed);
+      const unusedStr = unused % 1 === 0 ? unused + 'h' : unused.toFixed(2) + 'h';
+
+      return '<tr>' +
+        '<td class="rh-td-client"><div class="rh-client-name">' + short + '</div><div class="rh-client-cap">' + cap + 'h / mo</div></td>' +
+        cells +
+        '<td class="rh-td-unused"><div class="rh-unused-total">' + unusedStr + '</div><div class="rh-unused-sub">of ' + totalCap + 'h</div></td>' +
+        '</tr>';
+    }).join('');
+
+    el.innerHTML = '<table class="rh-table"><thead><tr>' + headers + '</tr></thead><tbody>' + rows + '</tbody></table>';
   }
 
   // Sync footer
