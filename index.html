@@ -403,10 +403,10 @@
         clients: 4,
         retainerCapacity: "70h",
         clientRows: [
-          { name: "Careflux ehf. ID 490224-1140", meta: "Fundur og undirbúningur, MÁP LSH, Intro meeting", hoursUsed: 11.00, retainerHours: 30 },
-          { name: "Svepparíkið", meta: "Fundur m. UKL í Grósku", hoursUsed: 2.00, retainerHours: null },
-          { name: "Rivvi AI", meta: "Restructure contracts and advisor agreement", hoursUsed: 1.75, retainerHours: 30 },
-          { name: "Aftra ehf.", meta: "Retainer", hoursUsed: 0, retainerHours: 10 },
+          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer · 30h/month", hours: "11.00h", pct: 37, zero: false },
+          { name: "Svepparíkið", meta: "Fundur m. UKL í Grósku", hours: "2.00h", pct: 14, zero: false },
+          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "1.75h", pct: 6, zero: false },
+          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "0h used", pct: 0, zero: true },
         ]
       }
     },
@@ -420,9 +420,9 @@
         clients: 3,
         retainerCapacity: "70h",
         clientRows: [
-          { name: "Aftra ehf.", meta: "Aftra", hoursUsed: 0.50, retainerHours: 10 },
-          { name: "Rivvi AI", meta: "Retainer", hoursUsed: 0, retainerHours: 30 },
-          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer", hoursUsed: 0, retainerHours: 30 },
+          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "0.50h", pct: 5, zero: false },
+          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
+          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
         ]
       }
     },
@@ -436,9 +436,9 @@
         clients: 3,
         retainerCapacity: "70h",
         clientRows: [
-          { name: "Rivvi AI", meta: "Retainer", hoursUsed: 0, retainerHours: 30 },
-          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer", hoursUsed: 0, retainerHours: 30 },
-          { name: "Aftra ehf.", meta: "Retainer", hoursUsed: 0, retainerHours: 10 },
+          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
+          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
+          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "0h used", pct: 0, zero: true },
         ]
       }
     },
@@ -452,10 +452,10 @@
         clients: 4,
         retainerCapacity: "70h",
         clientRows: [
-          { name: "Careflux ehf. ID 490224-1140", meta: "Check in Orkuhúsið, Kirkjusandi, Húðvaktin", hoursUsed: 3.50, retainerHours: 30 },
-          { name: "Rivvi AI", meta: "Vanta, MSA SOW and Exhibits", hoursUsed: 1.75, retainerHours: 30 },
-          { name: "Colliva", meta: "Sjávarklasinn", hoursUsed: 1.50, retainerHours: null },
-          { name: "Aftra ehf.", meta: "Retainer", hoursUsed: 0, retainerHours: 10 },
+          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer · 30h/month", hours: "3.50h", pct: 12, zero: false },
+          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "1.75h", pct: 6, zero: false },
+          { name: "Colliva", meta: "Sjávarklasinn", hours: "1.50h", pct: 22, zero: false },
+          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "0h used", pct: 0, zero: true },
         ]
       }
     },
@@ -469,13 +469,14 @@
         clients: 4,
         retainerCapacity: "70h",
         clientRows: [
-          { name: "Rivvi AI", meta: "ISA SOW, ISA MSA, Rishabh", hoursUsed: 4.25, retainerHours: 30 },
-          { name: "Colliva", meta: "Colliva", hoursUsed: 1.00, retainerHours: null },
-          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer", hoursUsed: 0, retainerHours: 30 },
-          { name: "Aftra ehf.", meta: "Retainer", hoursUsed: 0, retainerHours: 10 },
+          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "4.25h", pct: 14, zero: false },
+          { name: "Colliva", meta: "Colliva", hours: "1.00h", pct: 19, zero: false },
+          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
+          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "0h used", pct: 0, zero: true },
         ]
       }
-    },    {
+    },
+        {
       key: "2026-03",
       label: "March 2026",
       driveLink: "https://docs.google.com/document/d/1VbBWYvmwfT-VLjJJmkEnvWf7egcfynJfbk2aDF6wBXk/edit?usp=drivesdk",
