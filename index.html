@@ -602,14 +602,18 @@
     const start = Math.max(0, currentIndex - 5);
     const slice = months.slice(start, currentIndex + 1);
 
-    // Collect retainer clients (identified by meta starting with "Retainer ·")
-    const clientSet = new Map(); // name → cap (hours)
+    // Normalize client names (strip ID suffixes so "Careflux ehf. ID 490224-1140" === "Careflux ehf.")
+    const normName = n => n.replace(/ ID \d{6}-\d{4}/, '').trim();
+
+    // Collect retainer clients
+    const clientSet = new Map(); // normalizedName → {cap, firstName}
     slice.forEach(m => {
       if (!m.data) return;
       m.data.clientRows.forEach(r => {
-        if (r.meta && r.meta.startsWith('Retainer ·') && !clientSet.has(r.name)) {
+        const norm = normName(r.name);
+        if (r.meta && r.meta.startsWith('Retainer ·') && !clientSet.has(norm)) {
           const capMatch = r.meta.match(/(\d+)h\/month/);
-          clientSet.set(r.name, capMatch ? parseInt(capMatch[1]) : 0);
+          clientSet.set(norm, { cap: capMatch ? parseInt(capMatch[1]) : 0, firstName: r.name });
         }
       });
     });
@@ -630,14 +634,14 @@
       '<th class="col-unused">Unused</th>'
     ].join('');
 
-    const rows = [...clientSet.entries()].map(([name, cap]) => {
-      const short = name.replace(' ID 490224-1140', '').replace('Careflux ehf.', 'Careflux');
+    const rows = [...clientSet.entries()].map(([norm, {cap}]) => {
+      const short = norm.replace('Careflux ehf.', 'Careflux');
       let totalUsed = 0;
 
       const cells = slice.map((m, i) => {
         const isCur = (start + i) === currentIndex;
         if (!m.data) return '<td class="rh-td-month"><span class="rh-no-data">—</span></td>';
-        const row = m.data.clientRows.find(r => r.name === name);
+        const row = m.data.clientRows.find(r => normName(r.name) === norm);
         if (!row || !row.meta || !row.meta.startsWith('Retainer ·')) return '<td class="rh-td-month"><span class="rh-no-data">—</span></td>';
 
         const used = row.zero ? 0 : parseFloat(row.hours);
