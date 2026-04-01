@@ -508,6 +508,91 @@
       color: #c7c7cc;
     }
 
+    .rc-client {
+      padding: 16px 0;
+      border-bottom: 1px solid #f0f0f5;
+    }
+
+    .rc-client:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .rc-client:first-child {
+      padding-top: 0;
+    }
+
+    .rc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .rc-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .rc-cap {
+      font-size: 12px;
+      color: #6e6e73;
+    }
+
+    .rc-bar-track {
+      height: 8px;
+      background: #e5e5ea;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .rc-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: #0071e3;
+      transition: width 0.4s ease;
+    }
+
+    .rc-bar-fill.over {
+      background: #c0392b;
+    }
+
+    .rc-stats {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: #6e6e73;
+    }
+
+    .rc-stats strong {
+      color: #1d1d1f;
+      font-weight: 600;
+    }
+
+    .rc-spark {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 24px;
+    }
+
+    .rc-spark-bar {
+      width: 14px;
+      background: #d1d1d6;
+      border-radius: 2px;
+      min-height: 2px;
+      transition: height 0.3s;
+    }
+
+    .rc-spark-bar.active {
+      background: #0071e3;
+    }
+
+    .rc-spark-bar.over {
+      background: #c0392b;
+    }
+
     .ob-section-header {
       font-size: 13px;
       font-weight: 700;
@@ -756,8 +841,8 @@
     </div>
 
     <div class="rh-card">
-      <div class="card-title">Retainer Usage â Last 6 Months</div>
-      <table class="rh-table" id="retainerTable"></table>
+      <div class="card-title">Retainer Overview</div>
+      <div id="retainerCards"></div>
     </div>
 
     <div class="card">
@@ -892,7 +977,7 @@
         section: 'GREY â Further Out',
         items: [
           {title: 'Equity Cliff: $75,000 in ISA Stock Options Vest', sub: 'Rivvi AI / ISA â SOW Â§4.3 Â· 6-month cliff', date: '2 Sept 2026', link: 'https://www.google.com/calendar/event?eid=NmtsMTBxNmoxdWsyODRmMWdhM2sxOHE4ODQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
-          {title: 'Last Day for 90-Day Termination Notice (Rivvi AI / ISA)', sub: 'Rivvi AI / ISA â MSA Â§9(a) Â· for contract end Jan 31 2027', date: '2 Nov 2026', link: 'https://www.google.com/calendar/event?eid=ZWk4bzRoZmg2a2RtcXU4cnUxaW5pYzZ1bjgga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
+          {title: 'Last Day for 90-Day Termination Notice (Rivvi AI / ISA)', sub: 'Rivvi AI / ISA â MSA Â§9(a) Â· for contract end Jan 31 2027', date: '2 Nov 2026', link: 'https://www.google.com/calendar/event?eid=ZWk4ozRoZmg2a2RtcXU4cnUxaW5pYzZ1bjgga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
           {title: 'Renewal Equity Negotiation Deadline', sub: 'Rivvi AI / ISA â SOW Â§4.3 Â· 60 days before term end', date: '2 Nov 2026', link: 'https://www.google.com/calendar/event?eid=cTQybWZnaGZpZ2hwNWdvcnVxNWMwMmd2bzgga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
           {title: 'Contract Expires: ISA MSA â IronStreet Advisors & Rivvi AI', sub: 'Rivvi AI / ISA â MSA Â· initial term ends', date: '31 Jan 2027', link: 'https://www.google.com/calendar/event?eid=amZkdWZvamxsbzBrMnJyZXN0a3NzMmF0MjQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
           {title: 'NDA Renewal Review: Join Ploy Ltd & Scaling Legal (1 year out)', sub: 'Join Ploy Ltd / Scaling Legal â NDA Â· expires Sep 2030', date: '3 Sept 2029', link: 'https://www.google.com/calendar/event?eid=cTZiaG40NzUwdm9vYTZrN2I1cXZtMnB1MjQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true}
@@ -1025,61 +1110,58 @@
     }
 
     function renderRetainerHistory() {
+      const retainerClients = [
+        {name: 'Careflux ehf.', cap: 30, match: c => c.name.includes('Careflux')},
+        {name: 'Rivvi AI', cap: 30, match: c => c.name === 'Rivvi AI'},
+        {name: 'Aftra ehf.', cap: 10, match: c => c.name === 'Aftra ehf.'}
+      ];
       const last6 = months.slice(-6);
-      let html = '<thead><tr><th>Month</th><th>Careflux (30h/mo)</th><th>Rivvi AI (30h/mo)</th><th>Aftra ehf. (10h/mo)</th><th>Unused</th></tr></thead><tbody>';
 
-      last6.forEach(month => {
-        if (!month.data) {
-          html += `<tr><td class="client-col">${month.label}</td><td colspan="4"><em style="color:#aeaeb2">No data</em></td></tr>`;
-          return;
-        }
+      let html = '';
+      retainerClients.forEach(client => {
+        const monthlyHours = last6.map(m => {
+          if (!m.data) return 0;
+          const row = m.data.clientRows.find(client.match);
+          return row ? (parseFloat(row.hours) || 0) : 0;
+        });
+        const monthLabels = last6.map(m => m.label.split(' ')[0].substring(0, 3));
 
-        const careflux = month.data.clientRows.find(c => c.name.includes('Careflux')) || {hours: '0h used'};
-        const rivvi = month.data.clientRows.find(c => c.name === 'Rivvi AI') || {hours: '0h used'};
-        const aftra = month.data.clientRows.find(c => c.name === 'Aftra ehf.') || {hours: '0h used'};
+        const currentHours = monthlyHours[monthlyHours.length - 1];
+        const pct = (currentHours / client.cap * 100).toFixed(0);
+        const isOver = currentHours > client.cap;
+        const totalUsed6mo = monthlyHours.reduce((a, b) => a + b, 0);
+        const avg6mo = (totalUsed6mo / last6.filter((m, i) => m.data).length || 0).toFixed(1);
+        const maxH = Math.max(...monthlyHours, client.cap);
 
-        const carefluxHours = parseFloat(careflux.hours) || 0;
-        const rivviHours = parseFloat(rivvi.hours) || 0;
-        const aftraHours = parseFloat(aftra.hours) || 0;
-        const totalUsed = carefluxHours + rivviHours + aftraHours;
-        const totalCapacity = 70;
-        const unused = totalCapacity - totalUsed;
-
-        const carefluxPct = (carefluxHours / 30 * 100).toFixed(0);
-        const rivviPct = (rivviHours / 30 * 100).toFixed(0);
-        const aftraPct = (aftraHours / 10 * 100).toFixed(0);
-
-        const isCurrentMonth = month === months[currentIndex];
-        const monthLabel = isCurrentMonth ? `<strong>${month.label}</strong>` : month.label;
+        let sparkHtml = '<div class="rc-spark">';
+        monthlyHours.forEach((h, i) => {
+          const barH = maxH > 0 ? Math.max((h / maxH) * 24, 2) : 2;
+          const isLast = i === monthlyHours.length - 1;
+          const overCap = h > client.cap;
+          const cls = isLast ? (overCap ? 'rc-spark-bar active over' : 'rc-spark-bar active') : (overCap ? 'rc-spark-bar over' : 'rc-spark-bar');
+          sparkHtml += `<div class="${cls}" style="height:${barH}px" title="${monthLabels[i]}: ${h}h"></div>`;
+        });
+        sparkHtml += '</div>';
 
         html += `
-          <tr ${isCurrentMonth ? 'class="rh-current"' : ''}>
-            <td class="client-col">${monthLabel}</td>
-            <td>
-              ${careflux.hours}
-              <span class="rh-mini"><span class="rh-mini-fill" style="width:${Math.min(carefluxPct, 100)}%"></span></span>
-              <span class="rh-cap-col">(${carefluxPct}%)</span>
-            </td>
-            <td>
-              ${rivvi.hours}
-              <span class="rh-mini"><span class="rh-mini-fill" style="width:${Math.min(rivviPct, 100)}%"></span></span>
-              <span class="rh-cap-col">(${rivviPct}%)</span>
-            </td>
-            <td>
-              ${aftra.hours}
-              <span class="rh-mini"><span class="rh-mini-fill" style="width:${Math.min(aftraPct, 100)}%"></span></span>
-              <span class="rh-cap-col">(${aftraPct}%)</span>
-            </td>
-            <td>
-              <span class="rh-unused">${unused.toFixed(1)}h</span>
-              <span class="rh-unused-sub">of 70h</span>
-            </td>
-          </tr>
+          <div class="rc-client">
+            <div class="rc-header">
+              <span class="rc-name">${client.name}</span>
+              <span class="rc-cap">${currentHours}h / ${client.cap}h this month (${pct}%)</span>
+            </div>
+            <div class="rc-bar-track">
+              <div class="rc-bar-fill ${isOver ? 'over' : ''}" style="width:${Math.min(pct, 100)}%"></div>
+            </div>
+            <div class="rc-stats">
+              ${sparkHtml}
+              <span>Avg <strong>${avg6mo}h</strong>/mo</span>
+              <span>Total <strong>${totalUsed6mo.toFixed(1)}h</strong> (6mo)</span>
+            </div>
+          </div>
         `;
       });
 
-      html += '</tbody>';
-      document.getElementById('retainerTable').innerHTML = html;
+      document.getElementById('retainerCards').innerHTML = html;
     }
 
     function renderObligations() {
