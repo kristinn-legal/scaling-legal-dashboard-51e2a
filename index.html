@@ -1,12 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="refresh" content="900" />
-  <title>Scaling Legal — CEO Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scaling Legal â CEO Dashboard</title>
+  <!-- PWA & Webapp -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CEO Dashboard">
+  <meta name="application-name" content="CEO Dashboard">
+  <meta name="theme-color" content="#1d1d1f">
+  <meta name="description" content="Scaling Legal CEO Dashboard â time tracking, schedule, contracts, obligations">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: #f5f5f7;
@@ -14,912 +30,1164 @@
       min-height: 100vh;
       padding: 32px 16px 64px;
     }
-    .container { max-width: 1100px; margin: 0 auto; }
-    /* Two-up row for time tracking + schedule */
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
     .top-row {
-      display: flex; gap: 20px; align-items: flex-start;
-      margin-bottom: 0; /* cards inside handle their own margin */
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      margin-bottom: 0;
     }
-    .top-row .card { flex: 1; min-width: 0; }
+
+    .top-row .card {
+      flex: 1;
+      min-width: 0;
+    }
+
     @media (max-width: 680px) {
-      .top-row { flex-direction: column; }
+      .top-row {
+        flex-direction: column;
+      }
     }
+
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       margin-bottom: 32px;
     }
-    header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
-    header .sub { font-size: 13px; color: #6e6e73; margin-top: 2px; }
-    .live-badge {
-      display: flex; align-items: center; gap: 6px;
-      font-size: 12px; font-weight: 600; color: #1d8348;
-      background: #eafaf1; border: 1px solid #a9dfbf;
-      border-radius: 20px; padding: 4px 10px;
+
+    header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
     }
+
+    header .sub {
+      font-size: 13px;
+      color: #6e6e73;
+      margin-top: 2px;
+    }
+
+    .live-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1a6b3a;
+      background: #e8f5e9;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
     .live-dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: #27ae60;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #1a6b3a;
       animation: pulse 2s infinite;
     }
+
     @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.3); }
+      0%, 100% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.4;
+      }
     }
+
     .card {
       background: #fff;
-      border-radius: 16px;
-      padding: 24px;
+      border-radius: 14px;
+      padding: 20px 22px;
       margin-bottom: 20px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      border: 1px solid #e5e5ea;
     }
+
     .card-title {
-      font-size: 11px; font-weight: 600; letter-spacing: 0.6px;
-      text-transform: uppercase; color: #6e6e73; margin-bottom: 16px;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.2px;
     }
-    /* Month navigation */
+
     .month-nav {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
     }
+
     .month-nav button {
-      background: none; border: none; cursor: pointer;
-      font-size: 20px; color: #1d1d1f; padding: 4px 8px;
-      border-radius: 8px; transition: background 0.15s;
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: #6e6e73;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.15s;
     }
-    .month-nav button:hover { background: #f0f0f0; }
-    .month-nav button:disabled { color: #d1d1d6; cursor: default; }
-    .month-nav button:disabled:hover { background: none; }
+
+    .month-nav button:hover {
+      background: #f0f0f5;
+    }
+
+    .month-nav button:disabled {
+      opacity: 0.25;
+      cursor: default;
+    }
+
     .month-label {
-      font-size: 18px; font-weight: 700; letter-spacing: -0.3px;
+      font-size: 15px;
+      font-weight: 600;
     }
-    .month-dots {
-      display: flex; gap: 4px; justify-content: center;
-      margin-bottom: 20px; flex-wrap: wrap;
+
+    .dot-nav {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
     }
-    .month-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #d1d1d6; cursor: pointer; transition: background 0.15s;
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #d1d1d6;
+      cursor: pointer;
+      transition: all 0.15s;
     }
-    .month-dot.has-data { background: #0071e3; }
-    .month-dot.active { background: #1d1d1f; transform: scale(1.4); }
-    .month-dot.active.has-data { background: #0071e3; }
-    /* Stats row */
+
+    .dot.active {
+      background: #0071e3;
+      transform: scale(1.35);
+    }
+
+    .dot.has-data {
+      background: #86868b;
+    }
+
     .stats-row {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
-      margin-bottom: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 18px;
     }
-    @media (max-width: 500px) {
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
+
+    @media (max-width: 480px) {
+      .stats-row {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
+
     .stat-box {
-      background: #f5f5f7; border-radius: 10px; padding: 12px 14px;
+      background: #f5f5f7;
+      border-radius: 10px;
+      padding: 12px 14px;
     }
+
     .stat-box .val {
-      font-size: 20px; font-weight: 700; letter-spacing: -0.5px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
       color: #1d1d1f;
     }
+
     .stat-box .lbl {
-      font-size: 11px; color: #6e6e73; margin-top: 2px;
+      font-size: 11px;
+      color: #6e6e73;
+      margin-top: 2px;
     }
-    /* Client rows */
-    .client-row { margin-bottom: 14px; }
-    .client-row:last-child { margin-bottom: 0; }
+
+    .client-row {
+      margin-bottom: 14px;
+    }
+
+    .client-row:last-child {
+      margin-bottom: 0;
+    }
+
     .client-header {
-      display: flex; justify-content: space-between; align-items: baseline;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
       margin-bottom: 5px;
     }
-    .client-name { font-size: 14px; font-weight: 600; }
-    .client-name.zero { color: #aeaeb2; }
-    .client-hours { font-size: 13px; color: #6e6e73; }
-    .client-meta { font-size: 12px; color: #aeaeb2; margin-bottom: 5px; }
-    .progress-track {
-      height: 4px; background: #e5e5ea; border-radius: 2px; overflow: hidden;
+
+    .client-name {
+      font-size: 14px;
+      font-weight: 600;
     }
+
+    .client-name.zero {
+      color: #aeaeb2;
+    }
+
+    .client-hours {
+      font-size: 13px;
+      color: #6e6e73;
+    }
+
+    .client-meta {
+      font-size: 12px;
+      color: #aeaeb2;
+      margin-bottom: 5px;
+    }
+
+    .progress-track {
+      height: 4px;
+      background: #e5e5ea;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
     .progress-fill {
-      height: 100%; border-radius: 2px; background: #0071e3;
+      height: 100%;
+      border-radius: 2px;
+      background: #0071e3;
       transition: width 0.4s ease;
     }
-    .progress-fill.zero { background: #d1d1d6; }
-    /* Empty state */
-    .empty-state {
-      text-align: center; padding: 32px 0; color: #6e6e73;
+
+    .progress-fill.zero {
+      background: transparent;
     }
-    .empty-state .icon { font-size: 32px; margin-bottom: 8px; }
-    .empty-state p { font-size: 14px; }
-    /* Drive link */
+
     .drive-link {
-      display: inline-flex; align-items: center; gap: 6px;
-      margin-top: 16px; font-size: 13px; color: #0071e3;
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #0071e3;
       text-decoration: none;
     }
-    .drive-link:hover { text-decoration: underline; }
-    /* Divider */
-    .divider {
-      height: 1px; background: #e5e5ea; margin: 16px 0;
+
+    .drive-link:hover {
+      text-decoration: underline;
     }
-    /* Contract rows */
-    .contract-row {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #f0f0f0;
+
+    .no-data {
+      color: #aeaeb2;
+      font-size: 13px;
+      padding: 24px 0;
+      text-align: center;
     }
-    .contract-row:last-child { border-bottom: none; }
-    .contract-name { font-size: 14px; font-weight: 500; }
-    .contract-link {
-      font-size: 13px; color: #0071e3; text-decoration: none;
-      flex-shrink: 0; margin-left: 12px;
-    }
-    .contract-link:hover { text-decoration: underline; }
-    /* Generator card */
-    .generator-card {
-      background: #1d1d1f;
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 20px;
-      color: #fff;
-    }
-    .generator-card .card-title { color: #aeaeb2; }
-    .generator-card p { font-size: 14px; color: #e5e5ea; margin-bottom: 16px; line-height: 1.5; }
+
     .btn-primary {
       display: inline-block;
-      background: #0071e3; color: #fff;
-      font-size: 14px; font-weight: 600;
-      padding: 10px 20px; border-radius: 10px;
-      text-decoration: none; transition: background 0.15s;
+      padding: 8px 16px;
+      background: #0071e3;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
     }
-    .btn-primary:hover { background: #0077ed; }
+
+    .btn-primary:hover {
+      background: #005bb5;
+    }
+
     .btn-secondary {
       display: inline-block;
-      background: #3a3a3c; color: #e5e5ea;
-      font-size: 13px; font-weight: 500;
-      padding: 8px 16px; border-radius: 8px;
-      text-decoration: none; transition: background 0.15s;
+      padding: 8px 16px;
+      background: #636366;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
       margin-left: 10px;
     }
-    .btn-secondary:hover { background: #48484a; }
-    /* Schedule card */
-    .schedule-date {
-      font-size: 13px; color: #6e6e73; margin-bottom: 16px; font-weight: 500;
+
+    .btn-secondary:hover {
+      background: #48484a;
     }
+
+    .schedule-date {
+      font-size: 13px;
+      color: #6e6e73;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .all-day-events {
+      margin-bottom: 18px;
+    }
+
+    .all-day-event {
+      background: #fff8e1;
+      border-left: 3px solid #d68910;
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .all-day-event a {
+      color: #1d1d1f;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .all-day-event a:hover {
+      text-decoration: underline;
+    }
+
     .cal-event {
-      display: flex; gap: 14px; align-items: flex-start;
-      padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
       position: relative;
     }
-    .cal-event:last-child { border-bottom: none; }
+
+    .cal-event:last-child {
+      border-bottom: none;
+    }
+
     .cal-time {
-      font-size: 12px; color: #6e6e73; min-width: 80px;
-      padding-top: 2px; flex-shrink: 0; line-height: 1.3;
-      cursor: pointer; border-radius: 6px; padding: 4px 6px;
-      margin-left: -6px; transition: background 0.15s;
+      font-size: 12px;
+      color: #6e6e73;
+      min-width: 80px;
+      padding-top: 2px;
+      flex-shrink: 0;
+      line-height: 1.3;
+      cursor: pointer;
+      border-radius: 6px;
+      padding: 4px 6px;
+      margin-left: -6px;
+      transition: background 0.15s;
       user-select: none;
     }
-    .cal-time:hover { background: #f0f0f5; }
+
+    .cal-time:hover {
+      background: #f0f0f5;
+    }
+
     .cal-time-edit {
-      display: flex; flex-direction: column; gap: 3px; min-width: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 80px;
     }
+
     .cal-time-edit input {
-      font-size: 12px; font-family: inherit; color: #1d1d1f;
-      border: 1px solid #0071e3; border-radius: 5px;
-      padding: 3px 6px; width: 68px; outline: none;
-      background: #f0f7ff;
+      font-size: 12px;
+      font-family: inherit;
+      color: #1d1d1f;
+      border: 1px solid #0071e3;
+      border-radius: 5px;
+      padding: 3px 6px;
+      width: 70px;
+      outline: none;
     }
-    .cal-body { flex: 1; }
+
+    .cal-info {
+      flex: 1;
+    }
+
     .cal-title {
-      font-size: 14px; font-weight: 600; color: #1d1d1f; line-height: 1.3;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1d1d1f;
     }
-    .cal-meta { font-size: 12px; color: #aeaeb2; margin-top: 2px; }
-    .cal-pill {
-      display: inline-block; font-size: 10px; font-weight: 700;
-      letter-spacing: 0.4px; text-transform: uppercase;
-      border-radius: 6px; padding: 2px 7px; margin-left: 8px;
-      vertical-align: middle;
+
+    .cal-title a {
+      color: inherit;
+      text-decoration: none;
     }
-    .cal-pill.now { background: #fff3cd; color: #856404; }
-    .cal-event.past .cal-title { color: #aeaeb2; }
-    .cal-event.past .cal-time { color: #c7c7cc; }
-    .cal-edit-hint {
-      font-size: 11px; color: #c7c7cc; text-align: right;
+
+    .cal-title a:hover {
+      text-decoration: underline;
+    }
+
+    .cal-subtitle {
+      font-size: 12px;
+      color: #aeaeb2;
+      margin-top: 2px;
+    }
+
+    .cal-cleaning {
+      opacity: 0.5;
+    }
+
+    .cal-hint {
+      text-align: center;
+      color: #aeaeb2;
+      font-size: 12px;
       margin-top: 10px;
     }
-    /* Contract obligations card */
-    .ob-section-label {
-      font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
-      text-transform: uppercase; margin: 16px 0 8px;
-      display: flex; align-items: center; gap: 6px;
+
+    .rh-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin-bottom: 20px;
+      border: 1px solid #e5e5ea;
+      overflow-x: auto;
     }
-    .ob-section-label:first-child { margin-top: 0; }
-    .ob-section-label.overdue { color: #c0392b; }
-    .ob-section-label.soon    { color: #d68910; }
-    .ob-section-label.upcoming { color: #1a6b3a; }
-    .ob-section-label.future  { color: #aeaeb2; }
+
+    .rh-card .card-title {
+      margin-bottom: 14px;
+    }
+
+    .rh-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .rh-table th {
+      text-align: left;
+      padding: 6px 10px;
+      font-weight: 600;
+      color: #6e6e73;
+      border-bottom: 1px solid #e5e5ea;
+      white-space: nowrap;
+    }
+
+    .rh-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #f5f5f7;
+      white-space: nowrap;
+    }
+
+    .rh-table .client-col {
+      font-weight: 600;
+      min-width: 100px;
+    }
+
+    .rh-table .cap-col {
+      font-size: 11px;
+      color: #aeaeb2;
+    }
+
+    .rh-mini {
+      display: inline-block;
+      width: 40px;
+      height: 4px;
+      border-radius: 2px;
+      background: #e5e5ea;
+      vertical-align: middle;
+      margin-left: 4px;
+      overflow: hidden;
+    }
+
+    .rh-mini-fill {
+      display: block;
+      height: 100%;
+      border-radius: 2px;
+      background: #0071e3;
+    }
+
+    .rh-current {
+      font-weight: 700;
+    }
+
+    .rh-unused {
+      font-weight: 700;
+      color: #aeaeb2;
+      font-size: 13px;
+    }
+
+    .rh-unused-sub {
+      font-size: 11px;
+      color: #c7c7cc;
+    }
+
+    .ob-section-header {
+      font-size: 13px;
+      font-weight: 700;
+      margin: 18px 0 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ob-section-header:first-child {
+      margin-top: 0;
+    }
+
     .ob-row {
-      display: flex; align-items: flex-start; gap: 12px;
-      padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #f5f5f7;
     }
-    .ob-row:last-child { border-bottom: none; }
-    .ob-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      flex-shrink: 0; margin-top: 5px;
+
+    .ob-row:last-child {
+      border-bottom: none;
     }
-    .ob-dot.overdue { background: #e74c3c; }
-    .ob-dot.soon    { background: #f39c12; }
-    .ob-dot.upcoming { background: #27ae60; }
-    .ob-dot.future  { background: #aeaeb2; }
-    .ob-body { flex: 1; min-width: 0; }
+
+    .ob-info {
+      flex: 1;
+    }
+
     .ob-title {
-      font-size: 13px; font-weight: 600; color: #1d1d1f;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1d1d1f;
     }
-    .ob-title a { color: inherit; text-decoration: none; }
-    .ob-title a:hover { text-decoration: underline; }
-    .ob-row.overdue .ob-title { color: #c0392b; }
+
+    .ob-title a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .ob-title a:hover {
+      text-decoration: underline;
+    }
+
+    .ob-row.overdue .ob-title {
+      color: #c0392b;
+    }
+
     .ob-sub {
-      font-size: 11px; color: #aeaeb2; margin-top: 2px;
+      font-size: 11px;
+      color: #aeaeb2;
+      margin-top: 2px;
     }
+
     .ob-date {
-      font-size: 11px; font-weight: 600; flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 600;
+      flex-shrink: 0;
       padding-top: 3px;
     }
-    .ob-date.overdue { color: #c0392b; }
-    .ob-date.soon    { color: #d68910; }
-    .ob-date.upcoming { color: #1a6b3a; }
-    .ob-date.future  { color: #aeaeb2; }
-    /* Obligation checkbox */
+
+    .ob-date.overdue {
+      color: #c0392b;
+    }
+
+    .ob-date.soon {
+      color: #d68910;
+    }
+
+    .ob-date.upcoming {
+      color: #1a6b3a;
+    }
+
+    .ob-date.future {
+      color: #aeaeb2;
+    }
+
     .ob-check {
-      width: 18px; height: 18px; border-radius: 5px;
-      border: 1.5px solid #d1d1d6; background: #fff;
-      flex-shrink: 0; cursor: pointer; margin-top: 3px;
-      display: flex; align-items: center; justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid #d1d1d6;
+      background: #fff;
+      flex-shrink: 0;
+      cursor: pointer;
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: background 0.15s, border-color 0.15s;
     }
-    .ob-check:hover { border-color: #0071e3; }
-    .ob-check.checked { background: #0071e3; border-color: #0071e3; }
+
+    .ob-check:hover {
+      border-color: #0071e3;
+    }
+
+    .ob-check.checked {
+      background: #0071e3;
+      border-color: #0071e3;
+    }
+
     .ob-check.checked::after {
-      content: ''; display: block;
-      width: 4px; height: 8px;
-      border: 2px solid #fff; border-top: none; border-left: none;
-      transform: rotate(45deg) translate(-1px, -1px);
+      content: '';
+      display: block;
+      width: 4px;
+      height: 8px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+      margin-top: -2px;
     }
-    .ob-row.done .ob-title { text-decoration: line-through; color: #aeaeb2; }
-    .ob-row.done .ob-sub   { color: #c7c7cc; }
-    .ob-row.done .ob-date  { color: #c7c7cc !important; }
-    .ob-row.done .ob-dot   { background: #d1d1d6 !important; }
-    /* Sync footer */
+
+    .ob-row.done {
+      opacity: 0.35;
+    }
+
+    .ob-row.done .ob-title {
+      text-decoration: line-through;
+    }
+
+    .contracts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .contract-item {
+      background: #f5f5f7;
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .contract-item .name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .contract-item a {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0071e3;
+      text-decoration: none;
+    }
+
+    .contract-item a:hover {
+      text-decoration: underline;
+    }
+
+    .generator-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin-bottom: 20px;
+      border: 1px solid #e5e5ea;
+    }
+
+    .generator-card .card-title {
+      margin-bottom: 8px;
+    }
+
+    .generator-desc {
+      font-size: 13px;
+      color: #6e6e73;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .generator-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     .sync-footer {
-      text-align: center; font-size: 12px; color: #aeaeb2; margin-top: 8px;
+      text-align: center;
+      font-size: 12px;
+      color: #aeaeb2;
+      padding: 12px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #f5f5f7;
+      border-top: 1px solid #e5e5ea;
     }
-    .sync-footer span { font-weight: 500; }
-    /* Retainer history table */
-    .rh-card { background:#fff; border-radius:16px; padding:0; margin-bottom:20px; box-shadow:0 1px 4px rgba(0,0,0,0.06); overflow:hidden; }
-    .rh-card-title { font-size:11px; font-weight:600; letter-spacing:0.6px; text-transform:uppercase; color:#6e6e73; padding:18px 20px 14px; border-bottom:1px solid #f0f0ec; }
-    .rh-table { width:100%; border-collapse:collapse; }
-    .rh-table th { font-size:10px; text-transform:uppercase; letter-spacing:0.07em; color:#aaa; font-weight:500; text-align:center; padding:10px 12px 8px; border-bottom:1px solid #f0f0ec; white-space:nowrap; }
-    .rh-table th.is-current { color:#4a7cdc; font-weight:700; }
-    .rh-table th.col-client { text-align:left; padding-left:20px; min-width:130px; }
-    .rh-table th.col-unused { text-align:right; padding-right:20px; color:#c0392b; opacity:0.7; }
-    .rh-table td { padding:10px 12px; border-bottom:1px solid #f8f8f6; vertical-align:middle; }
-    .rh-table tr:last-child td { border-bottom:none; }
-    .rh-table tr:hover td { background:#fafaf8; }
-    .rh-td-client { padding-left:20px !important; }
-    .rh-client-name { font-size:13px; font-weight:600; color:#1a1a1a; }
-    .rh-client-cap { font-size:11px; color:#bbb; margin-top:1px; }
-    .rh-td-month { text-align:center; min-width:76px; }
-    .rh-td-unused { text-align:right; padding-right:20px !important; }
-    .rh-cell-inner { display:flex; flex-direction:column; align-items:center; gap:4px; }
-    .rh-hours { font-size:12px; font-weight:600; font-variant-numeric:tabular-nums; color:#1a1a1a; white-space:nowrap; }
-    .rh-hours.is-current { color:#4a7cdc; }
-    .rh-mini-bar { width:52px; height:4px; background:#eee; border-radius:2px; overflow:hidden; }
-    .rh-mini-fill { height:100%; background:#1a1a1a; border-radius:2px; }
-    .rh-mini-fill.is-current { background:#4a7cdc; }
-    .rh-no-data { color:#ddd; font-size:13px; }
-    .rh-unused-total { font-size:13px; font-weight:700; font-variant-numeric:tabular-nums; color:#c0392b; }
-    .rh-unused-sub { font-size:10px; color:#bbb; white-space:nowrap; }
+
+    .sync-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .sync-dot.green {
+      background: #34c759;
+    }
+
+    .sync-dot.amber {
+      background: #ff9f0a;
+    }
+
+    .sync-dot.red {
+      background: #ff3b30;
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <header>
-    <div>
-      <h1>Scaling Legal</h1>
-      <div class="sub">CEO Dashboard</div>
-    </div>
-    <div class="live-badge">
-      <div class="live-dot"></div>
-      Live
-    </div>
-  </header>
-
-  <!-- Time Tracking + Schedule side by side -->
-  <div class="top-row">
-    <div class="card" id="time-card">
-      <div class="card-title">Time Tracking</div>
-      <div class="month-nav">
-        <button id="btn-prev" onclick="navigate(-1)">&#8592;</button>
-        <div class="month-label" id="month-label">—</div>
-        <button id="btn-next" onclick="navigate(1)">&#8594;</button>
+  <div class="container">
+    <header>
+      <div>
+        <h1>Scaling Legal</h1>
+        <div class="sub">CEO Dashboard</div>
       </div>
-      <div class="month-dots" id="month-dots"></div>
-      <div id="month-content"></div>
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        Live
+      </div>
+    </header>
+
+    <div class="top-row">
+      <div class="card">
+        <div class="card-title">Time Tracking</div>
+        <div class="month-nav">
+          <button id="prevBtn" onclick="navigate(-1)">â</button>
+          <span class="month-label" id="monthLabel"></span>
+          <button id="nextBtn" onclick="navigate(1)">â</button>
+        </div>
+        <div class="dot-nav" id="dotNav"></div>
+        <div class="stats-row" id="statsRow"></div>
+        <div id="timeTrackingContent"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Today's Schedule</div>
+        <div class="schedule-date" id="scheduleDate"></div>
+        <div id="allDayEvents" class="all-day-events"></div>
+        <div id="scheduleContent"></div>
+      </div>
+    </div>
+
+    <div class="rh-card">
+      <div class="card-title">Retainer Usage â Last 6 Months</div>
+      <table class="rh-table" id="retainerTable"></table>
     </div>
 
     <div class="card">
-      <div class="card-title">Today's Schedule</div>
-      <div class="schedule-date" id="cal-date"></div>
-      <div id="cal-events"></div>
+      <div class="card-title">Contract Obligations</div>
+      <div id="obligationsContent"></div>
     </div>
-  </div>
 
-  <!-- Retainer Usage History -->
-  <div class="rh-card">
-    <div class="rh-card-title">Retainer Usage — Last 6 Months</div>
-    <div id="rh-chart"></div>
-  </div>
-
-
-  <!-- Contract Obligations Card -->
-  <div class="card" style="margin-top:20px;">
-    <div class="card-title">Contract Obligations</div>
-    <div id="ob-content"></div>
-  </div>
-
-  <!-- Contract Management Card -->
-  <div class="card">
-    <div class="card-title">Contract Management</div>
-    <div class="contract-row">
-      <span class="contract-name">Careflux ehf.</span>
-      <a class="contract-link" href="https://docs.google.com/document/d/1y5unpiDewoJqXANA9pIXYYM8ESCEJgje6GAh27HrXI4/edit" target="_blank">Open ↗</a>
+    <div class="card">
+      <div class="card-title">Contract Management</div>
+      <div class="contracts-grid" id="contractsGrid"></div>
     </div>
-    <div class="contract-row">
-      <span class="contract-name">Risk ehf</span>
-      <a class="contract-link" href="https://docs.google.com/document/d/1XKg0bhaA59UDDVI-w_gzcblqQXxp5x7Sdmz2Vxd5VP0/edit" target="_blank">Open ↗</a>
-    </div>
-    <div style="margin-top:14px;">
-      <a class="contract-link" href="https://drive.google.com/drive/folders/18fnUmbnKcsNrYokIMphdLEdWTlRRdzR4" target="_blank">Browse all contracts in Drive ↗</a>
-    </div>
-  </div>
 
-  <!-- Contract Generator Card -->
-  <div class="generator-card">
-    <div class="card-title">Contract Generator</div>
-    <p>Generate a new client contract from the master template. Fill in client details and the contract will be auto-populated.</p>
-    <a class="btn-primary" href="https://docs.google.com/document/d/1ovQdoU5GgoqDmXiXc4hNgo371tuT6FiXNlTGp5HnJ3w/edit" target="_blank">Open Template</a>
-    <a class="btn-secondary" href="https://drive.google.com/drive/folders/18fnUmbnKcsNrYokIMphdLEdWTlRRdzR4" target="_blank">Generated Contracts</a>
-  </div>
-
-  <div class="sync-footer" id="sync-footer">
-    Synced <span id="synced-ago">just now</span> · Next sync in <span id="next-sync">15:00</span>
-  </div>
-</div>
-
-<script>
-  // LAST_SYNCED: 2026-03-23T11:05:36
-  const LAST_SYNCED = "2026-03-23T11:05:36";
-
-  const months = [
-    { key: "2025-01", label: "January 2025", data: null },
-    { key: "2025-02", label: "February 2025", data: null },
-    { key: "2025-03", label: "March 2025", data: null },
-    { key: "2025-04", label: "April 2025", data: null },
-    { key: "2025-05", label: "May 2025", data: null },
-    { key: "2025-06", label: "June 2025", data: null },
-    { key: "2025-07", label: "July 2025", data: null },
-    { key: "2025-08", label: "August 2025", data: null },
-    {
-      key: "2025-09",
-      label: "September 2025",
-      driveLink: "https://docs.google.com/document/d/1KWhTWIPQDGby1XcSxysZ2hYOulW41dxwf0aIAO4gPxQ/edit?usp=drivesdk",
-      data: {
-        totalHours: "8.75h",
-        totalEntries: 7,
-        clients: 5,
-        retainerCapacity: "70h",
-        clientRows: [
-          { name: "Aftra", meta: "FME Inkasso · Símtal v. BO · Svara VMS", hours: "5.75h", pct: 66, zero: false },
-          { name: "Ísfactor ehf.", meta: "Fundur með Höiberg og Arnari · Fundur m. A og J", hours: "3.00h", pct: 34, zero: false },
-          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
-          { name: "Careflux ehf.", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
-          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "0h used", pct: 0, zero: true }
-        ]
-      }
-    },
-    {
-      key: "2025-10",
-      label: "October 2025",
-      driveLink: "https://docs.google.com/document/d/1XFe9IaKjJ-JuMHNnPEdAGq5K0BGFFQrlapaGxRx1ubE/edit?usp=drivesdk",
-      data: {
-        totalHours: "14.75h",
-        totalEntries: 6,
-        clients: 4,
-        retainerCapacity: "70h",
-        clientRows: [
-          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer · 30h/month", hours: "11.00h", pct: 37, zero: false },
-          { name: "Svepparíkið", meta: "Fundur m. UKL í Grósku", hours: "2.00h", pct: 14, zero: false },
-          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "1.75h", pct: 6, zero: false },
-          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "0h used", pct: 0, zero: true },
-        ]
-      }
-    },
-    {
-      key: "2025-11",
-      label: "November 2025",
-      driveLink: "https://docs.google.com/document/d/1NizveIqElT7ba29ClS8JdytFVn0qr3ZsrrfWxHnyueE/edit?usp=drivesdk",
-      data: {
-        totalHours: "0.50h",
-        totalEntries: 1,
-        clients: 3,
-        retainerCapacity: "70h",
-        clientRows: [
-          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "0.50h", pct: 5, zero: false },
-          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
-          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
-        ]
-      }
-    },
-    {
-      key: "2025-12",
-      label: "December 2025",
-      driveLink: "https://docs.google.com/document/d/1uabrU1PbuyYgjRZE0pImrnp_WMHEJe2ksD2yFhUNNMU/edit?usp=drivesdk",
-      data: {
-        totalHours: "0.00h",
-        totalEntries: 0,
-        clients: 3,
-        retainerCapacity: "70h",
-        clientRows: [
-          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
-          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
-          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "0h used", pct: 0, zero: true },
-        ]
-      }
-    },
-    {
-      key: "2026-01",
-      label: "January 2026",
-      driveLink: "https://docs.google.com/document/d/1Z8McEgWm30-_yFS_Mmx_ylzDjqzQs2fybcSVuSmlPKY/edit?usp=drivesdk",
-      data: {
-        totalHours: "6.75h",
-        totalEntries: 6,
-        clients: 4,
-        retainerCapacity: "70h",
-        clientRows: [
-          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer · 30h/month", hours: "3.50h", pct: 12, zero: false },
-          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "1.75h", pct: 6, zero: false },
-          { name: "Colliva", meta: "Sjávarklasinn", hours: "1.50h", pct: 22, zero: false },
-          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "0h used", pct: 0, zero: true },
-        ]
-      }
-    },
-    {
-      key: "2026-02",
-      label: "February 2026",
-      driveLink: "https://docs.google.com/document/d/16Bfs0Y_qwB9MdT8QZGWYeJWE2kbRXZ9CquAjvodAV4M/edit?usp=drivesdk",
-      data: {
-        totalHours: "5.25h",
-        totalEntries: 5,
-        clients: 4,
-        retainerCapacity: "70h",
-        clientRows: [
-          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "4.25h", pct: 14, zero: false },
-          { name: "Colliva", meta: "Colliva", hours: "1.00h", pct: 19, zero: false },
-          { name: "Careflux ehf. ID 490224-1140", meta: "Retainer · 30h/month", hours: "0h used", pct: 0, zero: true },
-          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "0h used", pct: 0, zero: true },
-        ]
-      }
-    },
-        {
-      key: "2026-03",
-      label: "March 2026",
-      driveLink: "https://docs.google.com/document/d/1VbBWYvmwfT-VLjJJmkEnvWf7egcfynJfbk2aDF6wBXk/edit?usp=drivesdk",
-      data: {
-        totalHours: "34.25h",
-        totalEntries: 26,
-        clients: 6,
-        retainerCapacity: "70h",
-        clientRows: [
-          { name: "Rivvi AI", meta: "Retainer · 30h/month", hours: "13.00h", pct: 43, zero: false },
-          { name: "Gleipnir", meta: "employment contracts · shareholder agreement", hours: "5.50h", pct: 16, zero: false },
-          { name: "Careflux ehf.", meta: "Retainer · 30h/month", hours: "5.25h", pct: 18, zero: false },
-          { name: "Fjarlækningar ehf.", meta: "LifePass contract review · Lyfju samningur", hours: "5.25h", pct: 15, zero: false },
-          { name: "Aftra ehf.", meta: "Retainer · 10h/month", hours: "3.50h", pct: 35, zero: false },
-          { name: "Colliva", meta: "pitch deck", hours: "1.75h", pct: 5, zero: false }
-        ]
-      }
-    }
-  ];
-
-  let currentIndex = 14; // March 2026 — most recent month with data
-
-  function navigate(dir) {
-    const next = currentIndex + dir;
-    if (next < 0 || next >= months.length) return;
-    currentIndex = next;
-    render();
-  }
-
-  function render() {
-    const m = months[currentIndex];
-    document.getElementById('month-label').textContent = m.label;
-    document.getElementById('btn-prev').disabled = currentIndex === 0;
-    document.getElementById('btn-next').disabled = currentIndex === months.length - 1;
-
-    // Dots
-    const dotsEl = document.getElementById('month-dots');
-    dotsEl.innerHTML = '';
-    months.forEach((mo, i) => {
-      const d = document.createElement('div');
-      d.className = 'month-dot' +
-        (mo.data ? ' has-data' : '') +
-        (i === currentIndex ? ' active' : '');
-      d.title = mo.label;
-      d.onclick = () => { currentIndex = i; render(); };
-      dotsEl.appendChild(d);
-    });
-
-    const contentEl = document.getElementById('month-content');
-    renderRetainerHistory();
-    if (!m.data) {
-      contentEl.innerHTML = `
-        <div class="empty-state">
-          <div class="icon">📋</div>
-          <p>No time report for ${m.label}.</p>
-        </div>`;
-      return;
-    }
-
-    const d = m.data;
-    let rowsHTML = d.clientRows.map(r => `
-      <div class="client-row">
-        <div class="client-header">
-          <span class="client-name${r.zero ? ' zero' : ''}">${r.name}</span>
-          <span class="client-hours">${r.hours}</span>
-        </div>
-        <div class="client-meta">${r.meta}</div>
-        <div class="progress-track">
-          <div class="progress-fill${r.zero ? ' zero' : ''}" style="width:${r.pct}%"></div>
-        </div>
-      </div>`).join('');
-
-    let driveLinkHTML = m.driveLink
-      ? `<a class="drive-link" href="${m.driveLink}" target="_blank">View full report in Drive ↗</a>`
-      : '';
-
-    contentEl.innerHTML = `
-      <div class="stats-row">
-        <div class="stat-box"><div class="val">${d.totalHours}</div><div class="lbl">Total Hours</div></div>
-        <div class="stat-box"><div class="val">${d.totalEntries}</div><div class="lbl">Entries</div></div>
-        <div class="stat-box"><div class="val">${d.clients}</div><div class="lbl">Clients</div></div>
-        <div class="stat-box"><div class="val">${d.retainerCapacity}</div><div class="lbl">Retainer Cap.</div></div>
+    <div class="generator-card">
+      <div class="card-title">Contract Generator</div>
+      <div class="generator-desc">Generate new contracts from our template library and store them in your generated contracts folder.</div>
+      <div class="generator-actions">
+        <a href="https://docs.google.com/document/d/1ovQdoU5GgoqDmXiXc4hNgo371tuT6FiXNlTGp5HnJ3w/edit" class="btn-primary">Open Template</a>
+        <a href="https://drive.google.com/drive/folders/18fnUmbnKcsNrYokIMphdLEdWTlRRdzR4" class="btn-secondary">Generated Contracts</a>
       </div>
-      <div class="divider"></div>
-      ${rowsHTML}
-      ${driveLinkHTML}`;
-  }
+    </div>
+  </div>
 
-  function renderRetainerHistory() {
-    const el = document.getElementById('rh-chart');
-    const start = Math.max(0, currentIndex - 5);
-    const slice = months.slice(start, currentIndex + 1);
+  <div class="sync-footer" id="syncFooter">
+    <div class="sync-dot green" id="syncDot"></div>
+    <span id="syncText">Synced</span>
+  </div>
 
-    // Normalize client names (strip ID suffixes so "Careflux ehf. ID 490224-1140" === "Careflux ehf.")
-    const normName = n => n.replace(/ ID \d{6}-\d{4}/, '').trim();
+  <script>
+    const LAST_SYNCED = '2026-04-01T09:00:00Z';
 
-    // Collect retainer clients
-    const clientSet = new Map(); // normalizedName → {cap, firstName}
-    slice.forEach(m => {
-      if (!m.data) return;
-      m.data.clientRows.forEach(r => {
-        const norm = normName(r.name);
-        if (r.meta && r.meta.startsWith('Retainer ·') && !clientSet.has(norm)) {
-          const capMatch = r.meta.match(/(\d+)h\/month/);
-          clientSet.set(norm, { cap: capMatch ? parseInt(capMatch[1]) : 0, firstName: r.name });
-        }
-      });
-    });
+    const months = [
+      {key:'2025-01',label:'January 2025',data:null},
+      {key:'2025-02',label:'February 2025',data:null},
+      {key:'2025-03',label:'March 2025',data:null},
+      {key:'2025-04',label:'April 2025',data:null},
+      {key:'2025-05',label:'May 2025',data:null},
+      {key:'2025-06',label:'June 2025',data:null},
+      {key:'2025-07',label:'July 2025',data:null},
+      {key:'2025-08',label:'August 2025',data:null},
+      {key:'2025-09',label:'September 2025',driveLink:'https://docs.google.com/document/d/1KWhTWIPQDGby1XcSxysZ2hYOulW41dxwf0aIAO4gPxQ/edit?usp=drivesdk',data:{totalHours:'8.75h',totalEntries:7,clients:5,retainerCapacity:'70h',clientRows:[
+        {name:'Aftra',hours:'5.75h',meta:'FME Inkasso Â· SÃ­mtal v. BO Â· Svara VMS',pct:66,zero:false},
+        {name:'Ãsfactor ehf.',hours:'3.00h',meta:'Fundur meÃ° HÃ¶iberg og Arnari Â· Fundur m. A og J',pct:34,zero:false},
+        {name:'Rivvi AI',hours:'0h used',meta:'Retainer Â· 30h/month',pct:0,zero:true},
+        {name:'Careflux ehf.',hours:'0h used',meta:'Retainer Â· 30h/month',pct:0,zero:true},
+        {name:'Aftra ehf.',hours:'0h used',meta:'Retainer Â· 10h/month',pct:0,zero:true}
+      ]}},
+      {key:'2025-10',label:'October 2025',driveLink:'https://docs.google.com/document/d/1XFe9IaKjJ-JuMHNnPEdAGq5K0BGFFQrlapaGxRx1ubE/edit?usp=drivesdk',data:{totalHours:'14.75h',totalEntries:10,clients:4,retainerCapacity:'70h',clientRows:[
+        {name:'Careflux ehf. ID 490224-1140',hours:'11.00h',meta:'Retainer Â· 30h/month',pct:37,zero:false},
+        {name:'SvepparÃ­dkiÃ°',hours:'2.00h',meta:'Fundur m. UKL Ã­ GrÃ³sku',pct:14,zero:false},
+        {name:'Rivvi AI',hours:'1.75h',meta:'Retainer Â· 30h/month',pct:6,zero:false},
+        {name:'Aftra ehf.',hours:'0h used',meta:'Retainer Â· 10h/month',pct:0,zero:true}
+      ]}},
+      {key:'2025-11',label:'November 2025',driveLink:'https://docs.google.com/document/d/1NizveIqElT7ba29ClS8JdytFVn0qr3ZsrrfWxHnyueE/edit?usp=drivesdk',data:{totalHours:'0.50h',totalEntries:1,clients:1,retainerCapacity:'70h',clientRows:[
+        {name:'Aftra ehf.',hours:'0.50h',meta:'Retainer Â· 10h/month',pct:5,zero:false},
+        {name:'Rivvi AI',hours:'0h used',meta:'Retainer Â· 30h/month',pct:0,zero:true},
+        {name:'Careflux ehf.',hours:'0h used',meta:'Retainer Â· 30h/month',pct:0,zero:true}
+      ]}},
+      {key:'2025-12',label:'December 2025',driveLink:'https://docs.google.com/document/d/1uabrU1PbuyYgjRZE0pImrnp_WMHEJe2ksD2yFhUNNMU/edit?usp=drivesdk',data:{totalHours:'0h',totalEntries:0,clients:0,retainerCapacity:'70h',clientRows:[
+        {name:'Rivvi AI',hours:'0h used',meta:'Retainer Â· 30h/month',pct:0,zero:true},
+        {name:'Careflux ehf.',hours:'0h used',meta:'Retainer Â· 30h/month',pct:0,zero:true},
+        {name:'Aftra ehf.',hours:'0h used',meta:'Retainer Â· 10h/month',pct:0,zero:true}
+      ]}},
+      {key:'2026-01',label:'January 2026',driveLink:'https://docs.google.com/document/d/1Z8McEgWm30-_yFS_Mmx_ylzDjqzQs2fybcSVuSmlPKY/edit?usp=drivesdk',data:{totalHours:'5.25h',totalEntries:5,clients:2,retainerCapacity:'70h',clientRows:[
+        {name:'Careflux ehf.',hours:'3.50h',meta:'Retainer Â· 30h/month',pct:12,zero:false},
+        {name:'Rivvi AI',hours:'1.75h',meta:'Retainer Â· 30h/month',pct:6,zero:false},
+        {name:'Aftra ehf.',hours:'0h used',meta:'Retainer Â· 10h/month',pct:0,zero:true}
+      ]}},
+      {key:'2026-02',label:'February 2026',driveLink:'https://docs.google.com/document/d/16Bfs0Y_qwB9MdT8QZGWYeJWE2kbRXZ9CquAjvodAV4M/edit?usp=drivesdk',data:{totalHours:'4.25h',totalEntries:3,clients:2,retainerCapacity:'70h',clientRows:[
+        {name:'Rivvi AI',hours:'4.25h',meta:'Retainer Â· 30h/month',pct:14,zero:false},
+        {name:'Careflux ehf.',hours:'0h used',meta:'Retainer Â· 30h/month',pct:0,zero:true},
+        {name:'Aftra ehf.',hours:'0h used',meta:'Retainer Â· 10h/month',pct:0,zero:true}
+      ]}},
+      {key:'2026-03',label:'March 2026',driveLink:'https://docs.google.com/document/d/1VbBWYvmwfT-VLjJJmkEnvWf7egcfynJfbk2aDF6wBXk/edit?usp=drivesdk',data:{totalHours:'57.75h',totalEntries:48,clients:7,retainerCapacity:'70h',clientRows:[
+        {name:'Rivvi AI',hours:'20.50h',meta:'Retainer Â· 30h/month',pct:68,zero:false},
+        {name:'Aftra ehf.',hours:'12.00h',meta:'Retainer Â· 10h/month',pct:120,zero:false},
+        {name:'Gleipnir',hours:'8.25h',meta:'employment contracts Â· shareholder agreement',pct:27,zero:false},
+        {name:'Careflux ehf.',hours:'8.00h',meta:'Retainer Â· 30h/month',pct:27,zero:false},
+        {name:'FjarlÃ¦kningar ehf.',hours:'6.75h',meta:'LifePass contract review Â· Lyfju samningur',pct:22,zero:false},
+        {name:'Colliva',hours:'1.75h',meta:'pitch deck',pct:6,zero:false},
+        {name:'BrÃº',hours:'0.50h',meta:'advisory',pct:2,zero:false}
+      ]}},
+      {key:'2026-04',label:'April 2026',data:{totalHours:'2.75h',totalEntries:3,clients:2,retainerCapacity:'70h',clientRows:[
+        {name:'Rivvi AI',hours:'1.75h',meta:'Retainer Â· 30h/month',pct:6,zero:false},
+        {name:'Careflux ehf.',hours:'1.00h',meta:'Retainer Â· 30h/month',pct:3,zero:false},
+        {name:'Aftra ehf.',hours:'0h used',meta:'Retainer Â· 10h/month',pct:0,zero:true}
+      ]}}
+    ];
 
-    if (clientSet.size === 0) {
-      el.innerHTML = '<div style="color:#bbb;font-size:13px;padding:16px 20px">No retainer data in this period.</div>';
-      return;
+    let currentIndex = 15;
+
+    const todayEvents = [
+      {time: '09:00', title: 'Check-in', subtitle: 'Careflux Â· Rivvi Â· Aftra Â· Secure IT Â· Ãsfactor Â· Coliva Â· Svepparidkid', link: 'https://www.google.com/calendar/event?eid=M2cybTk4aTlyZWkzbm1hbjI4aWM2N3JubnZfMjAyNjA0MDFUMDkwMDAwWiBrcmlzdGlubkBzY2FsaW5nLWxlZ2FsLmNvbQ&ctz=Atlantic/Reykjavik'},
+      {time: '11:00', title: 'Rasmus â Kristinn', subtitle: '', link: ''},
+      {time: '11:45 â 13:15', title: 'BUSY', subtitle: '', link: ''},
+      {time: '17:15', title: 'Gangur og stigi', subtitle: 'Cleaning task', link: '', cleaning: true},
+      {time: '17:45', title: 'Careflux - MÃP og Vinnslusamningur HH / StafrÃ¦n heilsa', subtitle: '', link: 'https://www.google.com/calendar/event?eid=MjVvc2c4aDRxbGRvaTBrb245bzR2NzQ0OTMga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik'},
+      {time: '21:30', title: 'Rivvi AI â Leading reach', subtitle: '', link: ''},
+      {time: '22:30', title: 'Non profit', subtitle: '', link: ''}
+    ];
+
+    const allDayEvents = [
+      {title: 'ð Equity Award Agreement Must Be Executed â Rivvi AI & ISA', link: 'https://www.google.com/calendar/event?eid=ZnVtbWF1Mm8wdW90bGFqaXRnY3ZyOHU2dTQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik'},
+      {title: 'ð Baseline Valuation & Revenue Must Be Established â Rivvi AI', link: 'https://www.google.com/calendar/event?eid=dGgxNDc3OHNsdDh2bjduZ3NvdThxNmcxNzAga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik'}
+    ];
+
+    const obligations = [
+      {
+        section: 'RED â Overdue',
+        items: [
+          {title: 'Attribution Ledger: Log Pair Team & Claritas/AptiHealth', sub: 'Rivvi AI / ISA â MSA Â· SOW Â§4.1', date: '16 Mar 2026', link: 'https://www.google.com/calendar/event?eid=c2ljZzFvMDE5dm1qb3Bqc2U2dGpocWZvMnMga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', overdue: true},
+          {title: 'Exhibit B Due: Pre-Existing Relationships List (Rivvi AI â ISA)', sub: 'Rivvi AI / ISA â MSA Â· SOW Â§4.4', date: '17 Mar 2026', link: 'https://www.google.com/calendar/event?eid=M2RlaDA3cTkwaTdhbDludnV1cWkzOWZpNWMga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', overdue: true}
+        ]
+      },
+      {
+        section: 'YELLOW â Due Today',
+        items: [
+          {title: 'Equity Award Agreement Must Be Executed', sub: 'Rivvi AI / ISA â MSA Â· SOW Â§4.3 Â· $150k stock options', date: '1 Apr 2026', link: 'https://www.google.com/calendar/event?eid=ZnVtbWF1Mm8wdW90bGFqaXRnY3ZyOHU2dTQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', soon: true},
+          {title: 'Baseline Valuation & Revenue Must Be Established (Rivvi AI)', sub: 'Rivvi AI / ISA â MSA Â· SOW Â§4.5', date: '1 Apr 2026', link: 'https://www.google.com/calendar/event?eid=dGgxNDc3OHNsdDh2bjduZ3NvdThxNmcxNzAga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', soon: true}
+        ]
+      },
+      {
+        section: 'GREEN â Upcoming (next 60 days)',
+        items: [
+          {title: 'ISA Monthly Activity Report Due â Month 1', sub: 'Rivvi AI / ISA â MSA Â· SOW Â§7.2(a)', date: '14 Apr 2026', link: 'https://www.google.com/calendar/event?eid=ZnRzZ2pqZW1ldmZ2bTZibGhqbmRwOTFtajAga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', upcoming: true},
+          {title: 'Monthly Commission Statement Due â Month 1 (Rivvi AI â ISA)', sub: 'Rivvi AI / ISA â MSA Â§8', date: '15 Apr 2026', link: 'https://www.google.com/calendar/event?eid=YnZpMWE3bWdvZDM0MGx2M2hlMGVrdG01dDQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', upcoming: true},
+          {title: 'First Advisory Fee Due: $25,000 (Rivvi AI â ISA)', sub: 'Rivvi AI / ISA â MSA Â§2(c) Â· SOW Â§4.2', date: '16 Apr 2026', link: 'https://www.google.com/calendar/event?eid=ZWVqb3BoNHB1czU1Z2FyMnRxaG1nOW01amsga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', upcoming: true},
+          {title: 'Exhibit B Good Faith Addition Period Closes', sub: 'Rivvi AI / ISA â SOW Â§4.4 Â· 45-day outer limit', date: '16 Apr 2026', link: 'https://www.google.com/calendar/event?eid=bTR0Ymgxdm9kOXJwb25mdGlhM2FwbWhybTAga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', upcoming: true},
+          {title: 'ISA 60-Day Ramp Ends â Introduction Obligation Now Active', sub: 'Rivvi AI / ISA â SOW Â§7.2(c) Â· min. 1 intro per 90 days', date: '2 May 2026', link: 'https://www.google.com/calendar/event?eid=cTBlMmNzdXVnZGg4MGM0ZnYxamxzMTV0aXMga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', upcoming: true}
+        ]
+      },
+      {
+        section: 'GREY â Further Out',
+        items: [
+          {title: 'Equity Cliff: $75,000 in ISA Stock Options Vest', sub: 'Rivvi AI / ISA â SOW Â§4.3 Â· 6-month cliff', date: '2 Sept 2026', link: 'https://www.google.com/calendar/event?eid=NmtsMTBxNmoxdWsyODRmMWdhM2sxOHE4ODQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
+          {title: 'Last Day for 90-Day Termination Notice (Rivvi AI / ISA)', sub: 'Rivvi AI / ISA â MSA Â§9(a) Â· for contract end Jan 31 2027', date: '2 Nov 2026', link: 'https://www.google.com/calendar/event?eid=ZWk4bzRoZmg2a2RtcXU4cnUxaW5pYzZ1bjgga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
+          {title: 'Renewal Equity Negotiation Deadline', sub: 'Rivvi AI / ISA â SOW Â§4.3 Â· 60 days before term end', date: '2 Nov 2026', link: 'https://www.google.com/calendar/event?eid=cTQybWZnaGZpZ2hwNWdvcnVxNWMwMmd2bzgga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
+          {title: 'Contract Expires: ISA MSA â IronStreet Advisors & Rivvi AI', sub: 'Rivvi AI / ISA â MSA Â· initial term ends', date: '31 Jan 2027', link: 'https://www.google.com/calendar/event?eid=amZkdWZvamxsbzBrMnJyZXN0a3NzMmF0MjQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
+          {title: 'NDA Renewal Review: Join Ploy Ltd & Scaling Legal (1 year out)', sub: 'Join Ploy Ltd / Scaling Legal â NDA Â· expires Sep 2030', date: '3 Sept 2029', link: 'https://www.google.com/calendar/event?eid=cTZiaG40NzUwdm9vYTZrN2I1cXZtMnB1MjQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true}
+        ]
+      }
+    ];
+
+    function navigate(delta) {
+      const newIndex = currentIndex + delta;
+      if (newIndex >= 0 && newIndex < months.length) {
+        currentIndex = newIndex;
+        render(currentIndex);
+      }
     }
 
-    const shortLbl = m => { const p = m.label.split(' '); return p[0].slice(0,3) + " '" + p[1].slice(2); };
+    function render(index) {
+      const month = months[index];
+      document.getElementById('monthLabel').textContent = month.label;
+      document.getElementById('prevBtn').disabled = index === 0;
+      document.getElementById('nextBtn').disabled = index === months.length - 1;
 
-    const headers = [
-      '<th class="col-client">Client</th>',
-      ...slice.map((m, i) => {
-        const isCur = (start + i) === currentIndex;
-        return '<th' + (isCur ? ' class="is-current"' : '') + '>' + shortLbl(m) + '</th>';
-      }),
-      '<th class="col-unused">Unused</th>'
-    ].join('');
+      renderDotNav(index);
+      const data = month.data;
 
-    const rows = [...clientSet.entries()].map(([norm, {cap}]) => {
-      const short = norm.replace('Careflux ehf.', 'Careflux');
-      let totalUsed = 0;
+      if (!data) {
+        document.getElementById('timeTrackingContent').innerHTML = '<div class="no-data">No data for this month</div>';
+        document.getElementById('statsRow').innerHTML = '';
+        return;
+      }
 
-      const cells = slice.map((m, i) => {
-        const isCur = (start + i) === currentIndex;
-        if (!m.data) return '<td class="rh-td-month"><span class="rh-no-data">—</span></td>';
-        const row = m.data.clientRows.find(r => normName(r.name) === norm);
-        if (!row || !row.meta || !row.meta.startsWith('Retainer ·')) return '<td class="rh-td-month"><span class="rh-no-data">—</span></td>';
-
-        const used = row.zero ? 0 : parseFloat(row.hours);
-        totalUsed += used;
-        const pct = Math.min(100, row.pct || 0);
-        const display = row.zero ? '0h' : row.hours;
-
-        return '<td class="rh-td-month"><div class="rh-cell-inner">' +
-          '<span class="rh-hours' + (isCur ? ' is-current' : '') + '">' + display + ' / ' + cap + 'h</span>' +
-          '<div class="rh-mini-bar"><div class="rh-mini-fill' + (isCur ? ' is-current' : '') + '" style="width:' + pct + '%"></div></div>' +
-          '</div></td>';
-      }).join('');
-
-      const totalCap = cap * slice.length;
-      const unused = Math.max(0, totalCap - totalUsed);
-      const unusedStr = unused % 1 === 0 ? unused + 'h' : unused.toFixed(2) + 'h';
-
-      return '<tr>' +
-        '<td class="rh-td-client"><div class="rh-client-name">' + short + '</div><div class="rh-client-cap">' + cap + 'h / mo</div></td>' +
-        cells +
-        '<td class="rh-td-unused"><div class="rh-unused-total">' + unusedStr + '</div><div class="rh-unused-sub">of ' + totalCap + 'h</div></td>' +
-        '</tr>';
-    }).join('');
-
-    el.innerHTML = '<table class="rh-table"><thead><tr>' + headers + '</tr></thead><tbody>' + rows + '</tbody></table>';
-  }
-
-  // Sync footer
-  function updateSyncDisplay() {
-    const last = new Date(LAST_SYNCED + 'Z');
-    const now = new Date();
-    const diffMs = now - last;
-    const diffMin = Math.floor(diffMs / 60000);
-    let agoText;
-    if (diffMin < 1) agoText = 'just now';
-    else if (diffMin === 1) agoText = '1 min ago';
-    else if (diffMin < 60) agoText = diffMin + ' min ago';
-    else {
-      const h = Math.floor(diffMin / 60);
-      agoText = h + 'h ago';
-    }
-    document.getElementById('synced-ago').textContent = agoText;
-
-    // Next sync countdown (15 min from last sync)
-    const nextSync = new Date(last.getTime() + 15 * 60 * 1000);
-    const remaining = Math.max(0, nextSync - now);
-    const remMin = Math.floor(remaining / 60000);
-    const remSec = Math.floor((remaining % 60000) / 1000);
-    document.getElementById('next-sync').textContent =
-      remMin + ':' + String(remSec).padStart(2, '0');
-  }
-
-  // ── Today's Schedule ──────────────────────────────────────────────────────
-  const CAL_DATE = "Monday, 23 March 2026";
-  const calEvents = [
-    { start: "09:00", end: "09:30", startISO: "2026-03-23T09:00:00Z", endISO: "2026-03-23T09:30:00Z", title: "LifePass", meta: "2 attendees", link: "https://www.google.com/calendar/event?eid=MXVpZmFpNTUwZ29hcmMzNzRhNjk5cjNiZHUga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik" },
-    { start: "09:00", end: "10:00", startISO: "2026-03-23T09:00:00Z", endISO: "2026-03-23T10:00:00Z", title: "Check-in", meta: "Careflux · Rivvi · Aftra · Secure IT · Ísfactor · Coliva · Svepparíkið", link: "https://www.google.com/calendar/event?eid=M2cybTk4aTlyZWkzbm1hbjI4aWM2N3JubnZfMjAyNjAzMjNUMDkwMDAwWiBrcmlzdGlubkBzY2FsaW5nLWxlZ2FsLmNvbQ&ctz=Atlantic/Reykjavik" },
-    { start: "10:45", end: "11:45", startISO: "2026-03-23T10:45:00Z", endISO: "2026-03-23T11:45:00Z", title: "Rivvi — Apti agreement review", meta: null, link: "https://www.google.com/calendar/event?eid=MzEwa3JjN2pyc2NpdDMyNDBsODV1azFnczAga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik" },
-    { start: "12:15", end: "13:00", startISO: "2026-03-23T12:15:00Z", endISO: "2026-03-23T13:00:00Z", title: "Brú — skema fyrir lagabreytingar", meta: null, link: "https://www.google.com/calendar/event?eid=NW5xMnVsYWtoYjBzZDEyc2dyZWsycmtjZm8ga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik" },
-    { start: "13:15", end: "14:30", startISO: "2026-03-23T13:15:00Z", endISO: "2026-03-23T14:30:00Z", title: "Gleipnir — shareholder agreement", meta: null, link: "https://www.google.com/calendar/event?eid=NjdvaDU2dmY4ZjkxM3NmdXBvNjdyYmY3c3Mga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik" },
-    { start: "14:30", end: "15:00", startISO: "2026-03-23T14:30:00Z", endISO: "2026-03-23T15:00:00Z", title: "Careflux — Prepp", meta: null, link: "https://www.google.com/calendar/event?eid=MGFkMHQ0OTgyYmMyOGZuOTRmcjkzcjNiOW4ga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik" },
-    { start: "15:00", end: "16:00", startISO: "2026-03-23T15:00:00Z", endISO: "2026-03-23T16:00:00Z", title: "Careflux — Hönnun á tæknilegri onboarding pípulínu", meta: "Microsoft Teams · 4 attendees · org: Steindór Ellertsson", link: "https://www.google.com/calendar/event?eid=XzYwcTMwYzFnNjBvMzBlMWk2MG80YWMxZzYwcmo4Z3BsODhyajJjMWg4NHMzNGg5ZzYwczMwYzFnNjBvMzBjMWc4b3M0YWNhNDZoMWo0Y2ExODhyazhncGc2NG8zMGMxZzYwbzMwYzFnNjBvMzBjMWc2MG8zMmMxZzYwbzMwYzFnNjRyM2doMjY3NTEzYWQxajg4cmphZ3BrNmNzazJlMjE2dDJrNmNhNDhvcTNpZGExOGwwZyBrcmlzdGlubkBzY2FsaW5nLWxlZ2FsLmNvbQ&ctz=Atlantic/Reykjavik" },
-    { start: "17:15", end: "17:45", startISO: "2026-03-23T17:15:00Z", endISO: "2026-03-23T17:45:00Z", title: "Svefnherbergi 4×", meta: "Cleaning task", link: "https://www.google.com/calendar/event?eid=b2o5YmdiMjV2bWlkNTl2MnY4a2UxcThoMThfMjAyNjAzMjNUMTcxNTAwWiBrcmlzdGlubkBzY2FsaW5nLWxlZ2FsLmNvbQ&ctz=Atlantic/Reykjavik" }
-  ];
-
-  // Parse "HH:MM" on today's date to a UTC Date (Iceland = UTC year-round)
-  function parseTime(hhmm) {
-    const [h, m] = hhmm.split(':').map(Number);
-    const d = new Date('2026-03-23T00:00:00Z');
-    d.setUTCHours(h, m, 0, 0);
-    return d;
-  }
-
-  let editingIndex = null;
-
-  function renderCalendar() {
-    document.getElementById('cal-date').textContent = CAL_DATE;
-    const now = new Date();
-    const container = document.getElementById('cal-events');
-    const rows = calEvents.map((ev, i) => {
-      const start = parseTime(ev.start);
-      const end   = parseTime(ev.end);
-      const isNow  = now >= start && now < end;
-      const isPast = now >= end;
-      const stateClass = isPast ? ' past' : '';
-      const pill = isNow ? '<span class="cal-pill now">Now</span>' : '';
-      const meta = ev.meta ? `<div class="cal-meta">${ev.meta}</div>` : '';
-
-      const timeCol = (editingIndex === i)
-        ? `<div class="cal-time-edit">
-             <input id="edit-start-${i}" type="time" value="${ev.start}" />
-             <input id="edit-end-${i}"   type="time" value="${ev.end}" />
-           </div>`
-        : `<div class="cal-time" title="Click to edit time" onclick="startEdit(${i})">${ev.start}<br>${ev.end}</div>`;
-
-      return `<div class="cal-event${stateClass}" id="cal-row-${i}">
-        ${timeCol}
-        <div class="cal-body">
-          <a class="cal-title" href="${ev.link}" target="_blank" style="text-decoration:none;color:inherit;">${ev.title}</a>${pill}
-          ${meta}
+      document.getElementById('statsRow').innerHTML = `
+        <div class="stat-box">
+          <div class="val">${data.totalHours}</div>
+          <div class="lbl">Total Hours</div>
         </div>
-      </div>`;
-    }).join('');
+        <div class="stat-box">
+          <div class="val">${data.totalEntries}</div>
+          <div class="lbl">Entries</div>
+        </div>
+        <div class="stat-box">
+          <div class="val">${data.clients}</div>
+          <div class="lbl">Clients</div>
+        </div>
+        <div class="stat-box">
+          <div class="val">${data.retainerCapacity}</div>
+          <div class="lbl">Capacity</div>
+        </div>
+      `;
 
-    container.innerHTML = rows + '<div class="cal-edit-hint">Click a time to edit</div>';
-
-    // Attach listeners if an edit row is open
-    if (editingIndex !== null) {
-      const i = editingIndex;
-      ['start', 'end'].forEach(field => {
-        const el = document.getElementById(`edit-${field}-${i}`);
-        if (!el) return;
-        el.addEventListener('change', () => saveEdit(i));
-        el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === 'Escape') { saveEdit(i); } });
-        el.addEventListener('blur', () => setTimeout(() => saveEdit(i), 150));
-      });
-      // Focus first input
-      const firstInput = document.getElementById(`edit-start-${i}`);
-      if (firstInput) firstInput.focus();
-    }
-  }
-
-  function startEdit(i) {
-    editingIndex = i;
-    renderCalendar();
-  }
-
-  function saveEdit(i) {
-    if (editingIndex !== i) return;
-    const startEl = document.getElementById(`edit-start-${i}`);
-    const endEl   = document.getElementById(`edit-end-${i}`);
-    if (!startEl || !endEl) return;
-    const newStart = startEl.value;
-    const newEnd   = endEl.value;
-    if (newStart) calEvents[i].start = newStart;
-    if (newEnd)   calEvents[i].end   = newEnd;
-    editingIndex = null;
-    renderCalendar();
-  }
-
-  // ── Contract Obligations ──────────────────────────────────────────────────
-  const obligations = [
-    {
-      date: "2026-03-16", title: "Attribution Ledger: Log Pair Team & Claritas/AptiHealth",
-      contract: "Rivvi AI / ISA — MSA · SOW §4.1",
-      link: "https://www.google.com/calendar/event?eid=c2ljZzFvMDE5dm1qb3Bqc2U2dGpocWZvMnMga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2026-03-17", title: "Exhibit B Due: Pre-Existing Relationships List (Rivvi AI → ISA)",
-      contract: "Rivvi AI / ISA — MSA · SOW §4.4",
-      link: "https://www.google.com/calendar/event?eid=M2RlaDA3cTkwaTdhbDludnV1cWkzOWZpNWMga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2026-04-01", title: "Equity Award Agreement Must Be Executed",
-      contract: "Rivvi AI / ISA — MSA · SOW §4.3 · $150k stock options",
-      link: "https://www.google.com/calendar/event?eid=ZnVtbWF1Mm8wdW90bGFqaXRnY3ZyOHU2dTQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2026-04-01", title: "Baseline Valuation & Revenue Must Be Established (Rivvi AI)",
-      contract: "Rivvi AI / ISA — MSA · SOW §4.5",
-      link: "https://www.google.com/calendar/event?eid=dGgxNDc3OHNsdDh2bjduZ3NvdThxNmcxNzAga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2026-04-14", title: "ISA Monthly Activity Report Due — Month 1",
-      contract: "Rivvi AI / ISA — MSA · SOW §7.2(a)",
-      link: "https://www.google.com/calendar/event?eid=ZnRzZ2pqZW1ldmZ2bTZibGhqbmRwOTFtajAga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2026-04-15", title: "Monthly Commission Statement Due — Month 1 (Rivvi AI → ISA)",
-      contract: "Rivvi AI / ISA — MSA §8",
-      link: "https://www.google.com/calendar/event?eid=YnZpMWE3bWdvZDM0MGx2M2hlMGVrdG01dDQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2026-04-16", title: "First Advisory Fee Due: $25,000 (Rivvi AI → ISA)",
-      contract: "Rivvi AI / ISA — MSA §2(c) · SOW §4.2",
-      link: "https://www.google.com/calendar/event?eid=ZWVqb3BoNHB1czU1Z2FyMnRxaG1nOW01amsga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2026-04-16", title: "Exhibit B Good Faith Addition Period Closes",
-      contract: "Rivvi AI / ISA — SOW §4.4 · 45-day outer limit",
-      link: "https://www.google.com/calendar/event?eid=bTR0Ymgxdm9kOXJwb25mdGlhM2FwbWhybTAga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2026-05-02", title: "ISA 60-Day Ramp Ends — Introduction Obligation Now Active",
-      contract: "Rivvi AI / ISA — SOW §7.2(c) · min. 1 intro per 90 days",
-      link: "https://www.google.com/calendar/event?eid=cTBlMmNzdXVnZGg4MGM0ZnYxamxzMTV0aXMga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2026-09-02", title: "Equity Cliff: $75,000 in ISA Stock Options Vest",
-      contract: "Rivvi AI / ISA — SOW §4.3 · 6-month cliff",
-      link: "https://www.google.com/calendar/event?eid=NmtsMTBxNmoxdWsyODRmMWdhM2sxOHE4ODQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2026-11-02", title: "Last Day for 90-Day Termination Notice (Rivvi AI / ISA)",
-      contract: "Rivvi AI / ISA — MSA §9(a) · for contract end Jan 31 2027",
-      link: "https://www.google.com/calendar/event?eid=ZWk4bzRoZmg2a2RtcXU4cnUxaW5pYzZ1bjgga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2026-11-02", title: "Renewal Equity Negotiation Deadline",
-      contract: "Rivvi AI / ISA — SOW §4.3 · 60 days before term end",
-      link: "https://www.google.com/calendar/event?eid=cTQybWZnaGZpZ2hwNWdvcnVxNWMwMmd2bzgga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2027-01-31", title: "Contract Expires: ISA MSA — IronStreet Advisors & Rivvi AI",
-      contract: "Rivvi AI / ISA — MSA · initial term ends",
-      link: "https://www.google.com/calendar/event?eid=amZkdWZvamxsbzBrMnJyZXN0a3NzMmF0MjQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    },
-    {
-      date: "2029-09-03", title: "NDA Renewal Review: Join Ploy Ltd & Scaling Legal (1 year out)",
-      contract: "Join Ploy Ltd / Scaling Legal — NDA · expires Sep 2030",
-      link: "https://www.google.com/calendar/event?eid=cTZiaG40NzUwdm9vYTZrN2I1cXZtMnB1MjQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik"
-    }
-  ];
-
-  function formatObDate(iso) {
-    const d = new Date(iso + 'T00:00:00Z');
-    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
-  }
-
-  function obSeverity(iso) {
-    const today = new Date('2026-03-23T00:00:00Z');
-    const due   = new Date(iso + 'T00:00:00Z');
-    const days  = Math.round((due - today) / 86400000);
-    if (days < 0)   return 'overdue';
-    if (days <= 14) return 'soon';
-    if (days <= 60) return 'upcoming';
-    return 'future';
-  }
-
-  const obDone = new Set(); // in-memory completed set
-
-  function toggleOb(idx) {
-    if (obDone.has(idx)) obDone.delete(idx);
-    else obDone.add(idx);
-    renderObligations();
-  }
-
-  function renderObligations() {
-    const groups = { overdue: [], soon: [], upcoming: [], future: [] };
-    obligations.forEach((ob, i) => {
-      groups[obSeverity(ob.date)].push({ ...ob, _i: i });
-    });
-
-    const labels = {
-      overdue:  '🔴 Overdue',
-      soon:     '🟡 Due within 14 days',
-      upcoming: '🟢 Upcoming — next 60 days',
-      future:   '⚪ Further out'
-    };
-
-    let html = '';
-    ['overdue', 'soon', 'upcoming', 'future'].forEach(sev => {
-      if (!groups[sev].length) return;
-      html += `<div class="ob-section-label ${sev}">${labels[sev]}</div>`;
-      groups[sev].forEach(ob => {
-        const done = obDone.has(ob._i);
+      let html = '';
+      data.clientRows.forEach(client => {
+        const displayPct = client.zero ? 0 : client.pct;
         html += `
-          <div class="ob-row ${sev}${done ? ' done' : ''}">
-            <div class="ob-check${done ? ' checked' : ''}" onclick="toggleOb(${ob._i})" title="${done ? 'Mark incomplete' : 'Mark done'}"></div>
-            <div class="ob-dot ${sev}"></div>
-            <div class="ob-body">
-              <div class="ob-title"><a href="${ob.link}" target="_blank">${ob.title}</a></div>
-              <div class="ob-sub">${ob.contract}</div>
+          <div class="client-row">
+            <div class="client-header">
+              <span class="client-name ${client.zero ? 'zero' : ''}">${client.name}</span>
+              <span class="client-hours">${client.hours}</span>
             </div>
-            <div class="ob-date ${sev}">${formatObDate(ob.date)}</div>
-          </div>`;
+            <div class="client-meta">${client.meta}</div>
+            <div class="progress-track">
+              <div class="progress-fill ${client.zero ? 'zero' : ''}" style="width: ${displayPct}%"></div>
+            </div>
+          </div>
+        `;
       });
+
+      if (month.driveLink) {
+        html += `<a href="${month.driveLink}" class="drive-link">View full month in Google Drive</a>`;
+      }
+
+      document.getElementById('timeTrackingContent').innerHTML = html;
+    }
+
+    function renderDotNav(activeIndex) {
+      let html = '';
+      months.forEach((m, i) => {
+        const hasData = m.data !== null;
+        const isActive = i === activeIndex;
+        let cls = 'dot';
+        if (isActive) cls += ' active';
+        else if (hasData) cls += ' has-data';
+        html += `<div class="${cls}" onclick="currentIndex=${i}; render(${i})"></div>`;
+      });
+      document.getElementById('dotNav').innerHTML = html;
+    }
+
+    function renderSchedule() {
+      const dateObj = new Date(2026, 3, 1);
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateStr = dateObj.toLocaleDateString('en-US', options);
+      document.getElementById('scheduleDate').textContent = dateStr;
+
+      let allDayHtml = '';
+      allDayEvents.forEach(evt => {
+        allDayHtml += `
+          <div class="all-day-event">
+            <a href="${evt.link}">${evt.title}</a>
+          </div>
+        `;
+      });
+      document.getElementById('allDayEvents').innerHTML = allDayHtml;
+
+      let html = '';
+      todayEvents.forEach((evt, i) => {
+        const isEditing = false;
+        const subtitle = evt.subtitle ? `<div class="cal-subtitle">${evt.subtitle}</div>` : '';
+        const titleLink = evt.link ? `<a href="${evt.link}">${evt.title}</a>` : evt.title;
+        const titleClass = evt.cleaning ? 'cal-title cal-cleaning' : 'cal-title';
+
+        html += `
+          <div class="cal-event">
+            <div class="cal-time" onclick="toggleEditTime(${i})">${evt.time}</div>
+            <div class="cal-info">
+              <div class="${titleClass}">${titleLink}</div>
+              ${subtitle}
+            </div>
+          </div>
+        `;
+      });
+
+      if (todayEvents.length === 0) {
+        html = '<div class="cal-hint">No events scheduled for today</div>';
+      }
+
+      document.getElementById('scheduleContent').innerHTML = html;
+    }
+
+    function toggleEditTime(index) {
+      console.log('Edit time:', index);
+    }
+
+    function renderRetainerHistory() {
+      const last6 = months.slice(-6);
+      let html = '<thead><tr><th>Month</th><th>Careflux (30h/mo)</th><th>Rivvi AI (30h/mo)</th><th>Aftra ehf. (10h/mo)</th><th>Unused</th></tr></thead><tbody>';
+
+      last6.forEach(month => {
+        if (!month.data) {
+          html += `<tr><td class="client-col">${month.label}</td><td colspan="4"><em style="color:#aeaeb2">No data</em></td></tr>`;
+          return;
+        }
+
+        const careflux = month.data.clientRows.find(c => c.name.includes('Careflux')) || {hours: '0h used'};
+        const rivvi = month.data.clientRows.find(c => c.name === 'Rivvi AI') || {hours: '0h used'};
+        const aftra = month.data.clientRows.find(c => c.name === 'Aftra ehf.') || {hours: '0h used'};
+
+        const carefluxHours = parseFloat(careflux.hours) || 0;
+        const rivviHours = parseFloat(rivvi.hours) || 0;
+        const aftraHours = parseFloat(aftra.hours) || 0;
+        const totalUsed = carefluxHours + rivviHours + aftraHours;
+        const totalCapacity = 70;
+        const unused = totalCapacity - totalUsed;
+
+        const carefluxPct = (carefluxHours / 30 * 100).toFixed(0);
+        const rivviPct = (rivviHours / 30 * 100).toFixed(0);
+        const aftraPct = (aftraHours / 10 * 100).toFixed(0);
+
+        const isCurrentMonth = month === months[currentIndex];
+        const monthLabel = isCurrentMonth ? `<strong>${month.label}</strong>` : month.label;
+
+        html += `
+          <tr ${isCurrentMonth ? 'class="rh-current"' : ''}>
+            <td class="client-col">${monthLabel}</td>
+            <td>
+              ${careflux.hours}
+              <span class="rh-mini"><span class="rh-mini-fill" style="width:${Math.min(carefluxPct, 100)}%"></span></span>
+              <span class="rh-cap-col">(${carefluxPct}%)</span>
+            </td>
+            <td>
+              ${rivvi.hours}
+              <span class="rh-mini"><span class="rh-mini-fill" style="width:${Math.min(rivviPct, 100)}%"></span></span>
+              <span class="rh-cap-col">(${rivviPct}%)</span>
+            </td>
+            <td>
+              ${aftra.hours}
+              <span class="rh-mini"><span class="rh-mini-fill" style="width:${Math.min(aftraPct, 100)}%"></span></span>
+              <span class="rh-cap-col">(${aftraPct}%)</span>
+            </td>
+            <td>
+              <span class="rh-unused">${unused.toFixed(1)}h</span>
+              <span class="rh-unused-sub">of 70h</span>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += '</tbody>';
+      document.getElementById('retainerTable').innerHTML = html;
+    }
+
+    function renderObligations() {
+      let html = '';
+      obligations.forEach(section => {
+        html += `<div class="ob-section-header">${section.section}</div>`;
+        section.items.forEach(item => {
+          const isDone = false;
+          let dateClass = 'ob-date';
+          if (item.overdue) dateClass += ' overdue';
+          else if (item.soon) dateClass += ' soon';
+          else if (item.upcoming) dateClass += ' upcoming';
+          else if (item.future) dateClass += ' future';
+
+          const rowClass = isDone ? 'ob-row done' : 'ob-row' + (item.overdue ? ' overdue' : '');
+          const linkTitle = item.link ? `<a href="${item.link}">${item.title}</a>` : item.title;
+
+          html += `
+            <div class="${rowClass}">
+              <div class="ob-info">
+                <div class="ob-title">${linkTitle}</div>
+                <div class="ob-sub">${item.sub}</div>
+              </div>
+              <div class="${dateClass}">${item.date}</div>
+              <div class="ob-check" onclick="toggleObligationCheck(this, '${item.title}')"></div>
+            </div>
+          `;
+        });
+      });
+      document.getElementById('obligationsContent').innerHTML = html;
+    }
+
+    function toggleObligationCheck(elem, title) {
+      elem.classList.toggle('checked');
+      elem.closest('.ob-row').classList.toggle('done');
+    }
+
+    function renderContracts() {
+      const contracts = [
+        {name: 'Careflux ehf.', link: 'https://docs.google.com/document/d/1y5unpiDewoJqXANA9pIXYYM8ESCEJgje6GAh27HrXI4/edit'},
+        {name: 'Risk ehf', link: 'https://docs.google.com/document/d/1XKg0bhaA59UDDVI-w_gzcblqQXxp5x7Sdmz2Vxd5VP0/edit'}
+      ];
+
+      let html = '';
+      contracts.forEach(c => {
+        html += `
+          <div class="contract-item">
+            <div class="name">${c.name}</div>
+            <a href="${c.link}">Open</a>
+          </div>
+        `;
+      });
+
+      html += `
+        <div class="contract-item" style="background: #f5f5f7; border: 1px dashed #d1d1d6; grid-column: 1 / -1; padding: 14px;">
+          <div style="flex: 1;">
+            <div style="font-size: 13px; color: #6e6e73; margin-bottom: 8px;">View all contracts</div>
+          </div>
+          <a href="https://drive.google.com/drive/folders/18fnUmbnKcsNrYokIMphdLEdWTlRRdzR4">Browse Folder</a>
+        </div>
+      `;
+
+      document.getElementById('contractsGrid').innerHTML = html;
+    }
+
+    function updateSyncDisplay() {
+      const lastSync = new Date(LAST_SYNCED);
+      const now = new Date();
+      const diffMs = now - lastSync;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+
+      const dot = document.getElementById('syncDot');
+      const text = document.getElementById('syncText');
+
+      if (diffHours >= 2) {
+        dot.className = 'sync-dot amber';
+        text.textContent = 'Stale Â· ' + (diffHours > 24 ? `${Math.floor(diffHours / 24)}d ago` : `${diffHours}h ago`);
+      } else if (diffMs > 3600000) {
+        dot.className = 'sync-dot amber';
+        text.textContent = 'Stale Â· ' + diffHours + 'h ago';
+      } else {
+        dot.className = 'sync-dot green';
+        const nextSync = 5 - (diffMins % 5);
+        text.textContent = 'Synced Â· Next sync in ' + nextSync + 'm';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      render(currentIndex);
+      renderSchedule();
+      renderRetainerHistory();
+      renderObligations();
+      renderContracts();
+      updateSyncDisplay();
+      setInterval(updateSyncDisplay, 60000);
     });
+  </script>
 
-    document.getElementById('ob-content').innerHTML = html;
-  }
-
-  render();
-  renderObligations();
-  renderCalendar();
-  setInterval(renderCalendar, 60000); // refresh event states every minute
-  updateSyncDisplay();
-  setInterval(updateSyncDisplay, 1000);
-</script>
+  <script>
+    // Register service worker for PWA / offline support
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').then(reg => {
+        console.log('SW registered:', reg.scope);
+      }).catch(err => {
+        console.warn('SW registration failed:', err);
+      });
+    }
+  </script>
 </body>
 </html>
