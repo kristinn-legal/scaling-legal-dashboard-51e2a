@@ -563,6 +563,7 @@
       gap: 16px;
       font-size: 12px;
       color: #6e6e73;
+      margin-bottom: 12px;
     }
 
     .rc-stats strong {
@@ -570,27 +571,63 @@
       font-weight: 600;
     }
 
-    .rc-spark {
-      display: flex;
-      align-items: flex-end;
-      gap: 3px;
-      height: 24px;
+    .rc-months {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
     }
 
-    .rc-spark-bar {
-      width: 14px;
+    .rc-month {
+      text-align: center;
+    }
+
+    .rc-month-bar-wrap {
+      height: 48px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      margin-bottom: 4px;
+    }
+
+    .rc-month-bar {
+      width: 100%;
+      max-width: 36px;
       background: #d1d1d6;
-      border-radius: 2px;
-      min-height: 2px;
+      border-radius: 3px;
+      min-height: 3px;
       transition: height 0.3s;
     }
 
-    .rc-spark-bar.active {
+    .rc-month-bar.active {
       background: #0071e3;
     }
 
-    .rc-spark-bar.over {
+    .rc-month-bar.over {
       background: #c0392b;
+    }
+
+    .rc-month-label {
+      font-size: 11px;
+      color: #aeaeb2;
+      margin-bottom: 2px;
+    }
+
+    .rc-month-hours {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1d1d1f;
+    }
+
+    .rc-month-hours.zero {
+      color: #d1d1d6;
+      font-weight: 400;
+    }
+
+    .rc-cap-line {
+      font-size: 11px;
+      color: #aeaeb2;
+      text-align: right;
+      margin-top: 4px;
     }
 
     .ob-section-header {
@@ -969,7 +1006,7 @@
           {title: 'ISA Monthly Activity Report Due â Month 1', sub: 'Rivvi AI / ISA â MSA Â· SOW Â§7.2(a)', date: '14 Apr 2026', link: 'https://www.google.com/calendar/event?eid=ZnRzZ2pqZW1ldmZ2bTZibGhqbmRwOTFtajAga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', upcoming: true},
           {title: 'Monthly Commission Statement Due â Month 1 (Rivvi AI â ISA)', sub: 'Rivvi AI / ISA â MSA Â§8', date: '15 Apr 2026', link: 'https://www.google.com/calendar/event?eid=YnZpMWE3bWdvZDM0MGx2M2hlMGVrdG01dDQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', upcoming: true},
           {title: 'First Advisory Fee Due: $25,000 (Rivvi AI â ISA)', sub: 'Rivvi AI / ISA â MSA Â§2(c) Â· SOW Â§4.2', date: '16 Apr 2026', link: 'https://www.google.com/calendar/event?eid=ZWVqb3BoNHB1czU1Z2FyMnRxaG1nOW01amsga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', upcoming: true},
-          {title: 'Exhibit B Good Faith Addition Period Closes', sub: 'Rivvi AI / ISA â SOW Â§4.4 Â· 45-day outer limit', date: '16 Apr 2026', link: 'https://www.google.com/calendar/event?eid=bTR0Ymgxdm9kOXJwb25mdGlhM2FwbWhybTAga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', upcoming: true},
+          {title: 'Exhibit B Good Faith Addition Period Closes', sub: 'Rivvi AI / ISA â SOW Â§4.4 Â· 45-day outer limit', date: '16 Apr 2026', link: 'https://www.google.com/calendar/event?eid=bTR0Ymgxdm9kOXJwb25mdGlja2FwbWhybTAga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', upcoming: true},
           {title: 'ISA 60-Day Ramp Ends â Introduction Obligation Now Active', sub: 'Rivvi AI / ISA â SOW Â§7.2(c) Â· min. 1 intro per 90 days', date: '2 May 2026', link: 'https://www.google.com/calendar/event?eid=cTBlMmNzdXVnZGg4MGM0ZnYxamxzMTV0aXMga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', upcoming: true}
         ]
       },
@@ -977,7 +1014,7 @@
         section: 'GREY â Further Out',
         items: [
           {title: 'Equity Cliff: $75,000 in ISA Stock Options Vest', sub: 'Rivvi AI / ISA â SOW Â§4.3 Â· 6-month cliff', date: '2 Sept 2026', link: 'https://www.google.com/calendar/event?eid=NmtsMTBxNmoxdWsyODRmMWdhM2sxOHE4ODQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
-          {title: 'Last Day for 90-Day Termination Notice (Rivvi AI / ISA)', sub: 'Rivvi AI / ISA â MSA Â§9(a) Â· for contract end Jan 31 2027', date: '2 Nov 2026', link: 'https://www.google.com/calendar/event?eid=ZWk4ozRoZmg2a2RtcXU4cnUxaW5pYzZ1bjgga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
+          {title: 'Last Day for 90-Day Termination Notice (Rivvi AI / ISA)', sub: 'Rivvi AI / ISA â MSA Â§9(a) Â· for contract end Jan 31 2027', date: '2 Nov 2026', link: 'https://www.google.com/calendar/event?eid=ZWk4bzRoZmg2a2RtcXU4cnUxaW5pYzZ1bjgga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
           {title: 'Renewal Equity Negotiation Deadline', sub: 'Rivvi AI / ISA â SOW Â§4.3 Â· 60 days before term end', date: '2 Nov 2026', link: 'https://www.google.com/calendar/event?eid=cTQybWZnaGZpZ2hwNWdvcnVxNWMwMmd2bzgga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
           {title: 'Contract Expires: ISA MSA â IronStreet Advisors & Rivvi AI', sub: 'Rivvi AI / ISA â MSA Â· initial term ends', date: '31 Jan 2027', link: 'https://www.google.com/calendar/event?eid=amZkdWZvamxsbzBrMnJyZXN0a3NzMmF0MjQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true},
           {title: 'NDA Renewal Review: Join Ploy Ltd & Scaling Legal (1 year out)', sub: 'Join Ploy Ltd / Scaling Legal â NDA Â· expires Sep 2030', date: '3 Sept 2029', link: 'https://www.google.com/calendar/event?eid=cTZiaG40NzUwdm9vYTZrN2I1cXZtMnB1MjQga3Jpc3Rpbm5Ac2NhbGluZy1sZWdhbC5jb20&ctz=Atlantic/Reykjavik', future: true}
@@ -1130,18 +1167,24 @@
         const pct = (currentHours / client.cap * 100).toFixed(0);
         const isOver = currentHours > client.cap;
         const totalUsed6mo = monthlyHours.reduce((a, b) => a + b, 0);
-        const avg6mo = (totalUsed6mo / last6.filter((m, i) => m.data).length || 0).toFixed(1);
+        const monthsWithData = last6.filter(m => m.data).length;
+        const avg6mo = monthsWithData > 0 ? (totalUsed6mo / monthsWithData).toFixed(1) : '0.0';
         const maxH = Math.max(...monthlyHours, client.cap);
 
-        let sparkHtml = '<div class="rc-spark">';
+        let barsHtml = '<div class="rc-months">';
         monthlyHours.forEach((h, i) => {
-          const barH = maxH > 0 ? Math.max((h / maxH) * 24, 2) : 2;
+          const barH = maxH > 0 ? Math.max((h / maxH) * 48, 3) : 3;
           const isLast = i === monthlyHours.length - 1;
           const overCap = h > client.cap;
-          const cls = isLast ? (overCap ? 'rc-spark-bar active over' : 'rc-spark-bar active') : (overCap ? 'rc-spark-bar over' : 'rc-spark-bar');
-          sparkHtml += `<div class="${cls}" style="height:${barH}px" title="${monthLabels[i]}: ${h}h"></div>`;
+          const barCls = isLast ? (overCap ? 'rc-month-bar active over' : 'rc-month-bar active') : (overCap ? 'rc-month-bar over' : 'rc-month-bar');
+          const hrsCls = h === 0 ? 'rc-month-hours zero' : 'rc-month-hours';
+          barsHtml += `<div class="rc-month">
+            <div class="rc-month-bar-wrap"><div class="${barCls}" style="height:${barH}px"></div></div>
+            <div class="rc-month-label">${monthLabels[i]}</div>
+            <div class="${hrsCls}">${h > 0 ? h + 'h' : 'â'}</div>
+          </div>`;
         });
-        sparkHtml += '</div>';
+        barsHtml += '</div>';
 
         html += `
           <div class="rc-client">
@@ -1153,10 +1196,11 @@
               <div class="rc-bar-fill ${isOver ? 'over' : ''}" style="width:${Math.min(pct, 100)}%"></div>
             </div>
             <div class="rc-stats">
-              ${sparkHtml}
               <span>Avg <strong>${avg6mo}h</strong>/mo</span>
               <span>Total <strong>${totalUsed6mo.toFixed(1)}h</strong> (6mo)</span>
+              <span>Cap <strong>${client.cap}h</strong>/mo</span>
             </div>
+            ${barsHtml}
           </div>
         `;
       });
