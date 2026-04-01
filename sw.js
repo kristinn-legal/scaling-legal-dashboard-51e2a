@@ -1,10 +1,9 @@
-const CACHE_NAME = 'sl-ceo-v1';
+const CACHE_NAME = 'sl-ceo-v2';
 const ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icon-192.png',
-  '/icon-512.png'
+  '/icon.svg'
 ];
 
 // Install — pre-cache shell
